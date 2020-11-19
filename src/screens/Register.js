@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import {Button, Input, Item, Label, Text, View} from 'native-base';
 import {Keyboard, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
+import {useNavigation} from '@react-navigation/native';
 
 const Register = () => {
   const [country, setCountry] = useState('Indonesia');
   const onCountryChange = (value) => {
     setCountry(value);
   };
+  const navigation = useNavigation();
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.parent}>
@@ -45,7 +47,10 @@ const Register = () => {
             </Item>
           </View>
         </View>
-        <Button full style={styles.btnNext}>
+        <Button
+          full
+          style={styles.btnNext}
+          onPress={() => navigation.navigate('ProfileInfo')}>
           <Text>Next</Text>
         </Button>
       </View>
@@ -72,6 +77,7 @@ const styles = StyleSheet.create({
   },
   txt: {
     textAlign: 'center',
+    fontSize: 14,
     color: '#b4b6b6',
     marginBottom: 10,
   },

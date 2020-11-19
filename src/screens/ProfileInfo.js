@@ -2,8 +2,10 @@ import React from 'react';
 import {Button, Input, Item, Text, View} from 'native-base';
 import {Keyboard, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
 
 const ProfileInfo = () => {
+  const navigation = useNavigation();
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.parent}>
@@ -24,7 +26,10 @@ const ProfileInfo = () => {
             <Icon name="emoticon-outline" size={25} color="#b4b6b6" />
           </View>
         </View>
-        <Button full style={styles.btnNext}>
+        <Button
+          full
+          style={styles.btnNext}
+          onPress={() => navigation.navigate('TopTabs')}>
           <Text>Next</Text>
         </Button>
       </View>

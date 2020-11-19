@@ -6,6 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import WelcomeScreen from './WelcomeScreen';
 import Register from './Register';
 import ProfileInfo from './ProfileInfo';
+import TopTabs from './TopTabs';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,16 @@ const Main = () => {
           options={{headerShown: false}}
           name="ProfileInfo"
           component={ProfileInfo}
+        />
+        <Stack.Screen
+          options={{
+            headerTitle: 'ChatKu',
+            headerTintColor: '#ffffff',
+            headerLeft: false,
+            headerStyle: {backgroundColor: '#21978b', elevation: 0},
+          }}
+          name="TopTabs"
+          component={TopTabs}
         />
       </Stack.Navigator>
     </NavigationContainer>

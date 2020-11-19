@@ -7,6 +7,7 @@ import WelcomeScreen from './WelcomeScreen';
 import Register from './Register';
 import ProfileInfo from './ProfileInfo';
 import TopTabs from './TopTabs';
+import ChatRoom from './ChatRoom';
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,15 @@ const Main = () => {
           }}
           name="TopTabs"
           component={TopTabs}
+        />
+        <Stack.Screen
+          options={({route}) => ({
+            title: route.params.name,
+            headerTintColor: '#ffffff',
+            headerStyle: {backgroundColor: '#21978b', elevation: 0},
+          })}
+          name="ChatRoom"
+          component={ChatRoom}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -1,6 +1,14 @@
+import {useNavigation} from '@react-navigation/native';
 import {Button} from 'native-base';
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const DATA = [
@@ -77,9 +85,16 @@ const DATA = [
 ];
 
 const RenderItem = ({dataChats}) => {
-  console.log(dataChats.image);
+  const navigation = useNavigation();
   return (
-    <View>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ChatRoom', {
+          id: dataChats.id,
+          image: dataChats.image,
+          name: dataChats.name,
+        })
+      }>
       <View style={styles.wrapperChats}>
         <Image style={styles.img} source={{uri: dataChats.image}} />
         <View style={styles.content}>
@@ -92,7 +107,7 @@ const RenderItem = ({dataChats}) => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

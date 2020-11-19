@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 
 const Status = () => {
   return (
-    <View>
+    <View style={styles.parent}>
       <Text>Status</Text>
     </View>
   );
@@ -11,4 +11,11 @@ const Status = () => {
 
 export default Status;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  parent: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

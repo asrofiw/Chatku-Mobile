@@ -1,7 +1,6 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Chat from './Chat';
+import ListChat from './ListChat';
 import Status from './Status';
 
 const Tab = createMaterialTopTabNavigator();
@@ -15,12 +14,10 @@ const TopTabs = () => {
         indicatorStyle: {backgroundColor: '#ffffff'},
         labelStyle: {fontWeight: 'bold'},
       }}>
-      <Tab.Screen name="Chats" component={Chat} />
+      <Tab.Screen name="Chats" component={ListChat} />
       <Tab.Screen name="Status" component={Status} />
     </Tab.Navigator>
   );
 };
 
 export default TopTabs;
-
-const styles = StyleSheet.create({});

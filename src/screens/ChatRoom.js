@@ -8,8 +8,9 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 
-const ChatRoom = ({route}) => {
+const ChatRoom = () => {
   const [message, setMessage] = useState('');
   const isTyping = (value) => {
     setMessage(value);
@@ -59,7 +60,7 @@ const ChatRoom = ({route}) => {
           </Item>
           <Button rounded style={styles.btnMic}>
             {message.length > 0 && (
-              <Icon name="send" size={30} color="#ffffff" />
+              <IconFontAwesome name="send" size={30} color="#ffffff" />
             )}
             {!message.length && (
               <Icon name="microphone" size={30} color="#ffffff" />

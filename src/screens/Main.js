@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 // Import Pages
 import WelcomeScreen from './WelcomeScreen';
+import Register from './Register';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,11 @@ const Main = () => {
           options={{headerShown: false}}
           name="WelcomeScreen"
           component={WelcomeScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="Register"
+          component={Register}
         />
       </Stack.Navigator>
     </NavigationContainer>

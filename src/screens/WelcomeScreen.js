@@ -1,8 +1,11 @@
 import React from 'react';
 import {Button, Text, View} from 'native-base';
 import {StyleSheet, Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const WelcomeScreen = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.parent}>
       <Text style={styles.title}>Welcome to ChatKu</Text>
@@ -12,7 +15,10 @@ const WelcomeScreen = () => {
           Read our Privacy Policy. Tap "Agree and Continue" to accept the Terms
           of Service.
         </Text>
-        <Button full style={styles.btn}>
+        <Button
+          full
+          style={styles.btn}
+          onPress={() => navigation.navigate('Register')}>
           <Text style={styles.txtBtn}>Agree and Continue</Text>
         </Button>
       </View>

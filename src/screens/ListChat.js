@@ -72,7 +72,8 @@ const DATA = [
     id: 9,
     image: 'https://image.flaticon.com/icons/png/512/147/147144.png',
     name: 'Asrofi',
-    chatPlaceholder: 'Hows your day?',
+    chatPlaceholder:
+      'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     date: '3:10 PM',
   },
   {
@@ -103,7 +104,14 @@ const RenderItem = ({dataChats}) => {
             <Text style={styles.date}>{dataChats.date}</Text>
           </View>
           <View>
-            <Text style={styles.message}>{dataChats.chatPlaceholder}</Text>
+            {dataChats.chatPlaceholder.length < 30 && (
+              <Text style={styles.message}>{dataChats.chatPlaceholder}</Text>
+            )}
+            {dataChats.chatPlaceholder.length > 30 && (
+              <Text style={styles.message}>
+                {dataChats.chatPlaceholder.substring(0, 30).concat('...')}
+              </Text>
+            )}
           </View>
         </View>
       </View>

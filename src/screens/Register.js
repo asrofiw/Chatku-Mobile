@@ -6,9 +6,34 @@ import {useNavigation} from '@react-navigation/native';
 
 const Register = () => {
   const [country, setCountry] = useState('Indonesia');
+  const [codeCountry, setcodeCountry] = useState('62');
   const onCountryChange = (value) => {
     setCountry(value);
+    onCodeCountry(value);
   };
+
+  const onCodeCountry = (value) => {
+    switch (value) {
+      case 'Indonesia':
+        setcodeCountry('62');
+        break;
+      case 'Malaysia':
+        setcodeCountry('60');
+        break;
+      case 'Philippines':
+        setcodeCountry('63');
+        break;
+      case 'Singapore':
+        setcodeCountry('65');
+        break;
+      case 'Thailand':
+        setcodeCountry('66');
+        break;
+      default:
+        setcodeCountry(codeCountry);
+    }
+  };
+
   const navigation = useNavigation();
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -18,17 +43,18 @@ const Register = () => {
           <Text style={styles.txt}>
             Enter your country code and phone number to register
           </Text>
-          <Picker
-            mode="dropdown"
-            style={styles.pickerCountry}
-            selectedValue={country}
-            onValueChange={onCountryChange}>
-            <Picker.Item label="Indonesia" value="Indonesia" />
-            <Picker.Item label="Malaysia" value="Malaysia" />
-            <Picker.Item label="Philippines" value="Philippines" />
-            <Picker.Item label="Singapore" value="Singapore" />
-            <Picker.Item label="Thailand" value="Thailand" />
-          </Picker>
+          <View style={styles.pickerCountry}>
+            <Picker
+              mode="dropdown"
+              selectedValue={country}
+              onValueChange={onCountryChange}>
+              <Picker.Item label="Indonesia" value="Indonesia" />
+              <Picker.Item label="Malaysia" value="Malaysia" />
+              <Picker.Item label="Philippines" value="Philippines" />
+              <Picker.Item label="Singapore" value="Singapore" />
+              <Picker.Item label="Thailand" value="Thailand" />
+            </Picker>
+          </View>
           <View style={styles.inputNumber}>
             <Item style={styles.itemInputCode}>
               <Label>+</Label>
@@ -36,6 +62,8 @@ const Register = () => {
                 style={styles.inputCode}
                 keyboardType="phone-pad"
                 placeholderTextColor="#b4b6b6"
+                value={codeCountry}
+                disabled
               />
             </Item>
             <Item style={styles.itemInput}>
@@ -83,6 +111,8 @@ const styles = StyleSheet.create({
   },
   pickerCountry: {
     marginBottom: 5,
+    borderBottomWidth: 2,
+    borderBottomColor: '#21978b',
   },
   inputNumber: {
     flexDirection: 'row',
@@ -92,7 +122,7 @@ const styles = StyleSheet.create({
     width: '23%',
     borderBottomWidth: 2,
     borderBottomColor: '#21978b',
-    paddingRight: 10,
+    paddingHorizontal: 10,
   },
   inputCode: {
     textAlign: 'right',

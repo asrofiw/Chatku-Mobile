@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -8,9 +8,10 @@ import Register from './Register';
 import ProfileInfo from './ProfileInfo';
 import TopTabs from './TopTabs';
 import ChatRoom from './ChatRoom';
-import {Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {Image, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, View} from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import DetailFriends from './DetailFriends';
 
 const Stack = createStackNavigator();
 
@@ -25,9 +26,9 @@ const HeaderBackPhoto = (props) => {
 
 const HeaderTitle = (props) => {
   return (
-    <TouchableOpacity style={styles.headerTitle}>
+    <View>
       <Text style={styles.title}>{props.name}</Text>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -38,11 +39,47 @@ const HeaderRight = () => {
         <Icon name="video" size={25} color="#ffffff" />
       </TouchableOpacity>
       <TouchableOpacity style={styles.rightIcon}>
-        <Icon style={styles.iconPhone} name="phone" size={25} color="#ffffff" />
+        <Icon name="phone" size={25} color="#ffffff" />
       </TouchableOpacity>
       <TouchableOpacity style={styles.rightIcon}>
         <Icon name="dots-vertical" size={25} color="#ffffff" />
       </TouchableOpacity>
+    </View>
+  );
+};
+
+const HeaderRightProfileFriends = () => {
+  const [isShow, setIsShow] = useState(false);
+
+  const showOptions = () => {
+    setIsShow(!isShow);
+  };
+  return (
+    <View>
+      <TouchableOpacity onPress={showOptions}>
+        <Icon name="dots-vertical" size={25} color="#ffffff" />
+      </TouchableOpacity>
+      <Modal animationType="none" transparent={true} visible={isShow}>
+        <View style={styles.modalOptions}>
+          <TouchableOpacity style={styles.btnOptionsFriends}>
+            <Text>Share</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnOptionsFriends}>
+            <Text>Edit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnOptionsFriends}>
+            <Text>View in address book</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnOptionsFriends}>
+            <Text>Verify security code</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={showOptions}
+            style={styles.btnOptionsFriends}>
+            <Text>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -77,15 +114,39 @@ const Main = () => {
           component={TopTabs}
         />
         <Stack.Screen
-          options={({route}) => ({
+          options={({navigation, route}) => ({
             headerBackImage: () => <HeaderBackPhoto img={route.params.image} />,
-            headerTitle: () => <HeaderTitle name={route.params.name} />,
+            headerTitle: () => (
+              <TouchableOpacity
+                style={styles.headerTitle}
+                onPress={() =>
+                  navigation.navigate('DetailFriends', {
+                    id: route.params.id,
+                    name: route.params.name,
+                    image: route.params.image,
+                  })
+                }>
+                <HeaderTitle name={route.params.name} />
+              </TouchableOpacity>
+            ),
             headerRight: () => <HeaderRight />,
             headerTintColor: '#ffffff',
             headerStyle: {backgroundColor: '#21978b', elevation: 0},
           })}
           name="ChatRoom"
           component={ChatRoom}
+        />
+        <Stack.Screen
+          options={({route}) => ({
+            headerTitle: route.params.name,
+            headerRight: () => <HeaderRightProfileFriends />,
+            headerRightContainerStyle: {marginRight: 10},
+            headerTransparent: true,
+            headerTintColor: '#ffffff',
+            headerStyle: {backgroundColor: '#21978b', elevation: 0},
+          })}
+          name="DetailFriends"
+          component={DetailFriends}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -106,7 +167,7 @@ const styles = StyleSheet.create({
     borderRadius: 35 / 2,
   },
   headerTitle: {
-    width: '83%',
+    width: '75%',
     marginHorizontal: 5,
     justifyContent: 'center',
     height: 50,
@@ -120,9 +181,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   rightIcon: {
-    marginRight: 10,
+    marginRight: 15,
   },
-  iconPhone: {
-    transform: [{rotate: '-90deg'}],
+  btnOptionsFriends: {
+    width: 180,
+    height: 50,
+    justifyContent: 'center',
+  },
+  modalOptions: {
+    borderRadius: 5,
+    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    marginTop: 10,
+    marginRight: 10,
+    width: '60%',
+    position: 'absolute',
+    right: 0,
   },
 });

@@ -73,11 +73,12 @@ const Chat = [
   },
 ];
 
-const ChatRoom = () => {
+const ChatRoom = ({route}) => {
   const [message, setMessage] = useState('');
   const isTyping = (value) => {
     setMessage(value);
   };
+  console.log(route.params);
 
   const RenderChat = ({chat}) => {
     return (
@@ -102,10 +103,11 @@ const ChatRoom = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.parent}>
         <FlatList
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.containerStyle}
           data={Chat}
           renderItem={({item}) => <RenderChat chat={item} />}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
         />
         <View style={styles.bottom}>
           <Item style={styles.itemInput}>

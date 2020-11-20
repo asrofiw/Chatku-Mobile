@@ -123,8 +123,10 @@ const Chat = () => {
   return (
     <View style={styles.parent}>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={DATA}
         renderItem={({item}) => <RenderItem dataChats={item} />}
+        keyExtractor={(item) => item.id.toString()}
       />
       <Button rounded style={styles.btnContact}>
         <Icon name="chat" size={30} color="#ffffff" />

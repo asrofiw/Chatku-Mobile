@@ -13,6 +13,7 @@ import TopTabs from './TopTabs';
 import ChatRoom from './ChatRoom';
 import DetailFriends from './DetailFriends';
 import SettingScreen from './SettingScreen';
+import DetailUser from './DetailUser';
 
 const Stack = createStackNavigator();
 
@@ -206,6 +207,15 @@ const Main = () => {
           })}
           name="SettingScreen"
           component={SettingScreen}
+        />
+        <Stack.Screen
+          options={() => ({
+            title: 'Profile',
+            headerTintColor: '#ffffff',
+            headerStyle: {backgroundColor: '#21978b', elevation: 0},
+          })}
+          name="DetailUser"
+          component={DetailUser}
         />
       </Stack.Navigator>
     </NavigationContainer>

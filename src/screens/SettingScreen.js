@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {
   Image,
@@ -10,9 +11,12 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const SettingScreen = () => {
+  const navigation = useNavigation();
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.parent}>
-      <TouchableOpacity style={styles.top}>
+      <TouchableOpacity
+        style={styles.top}
+        onPress={() => navigation.navigate('DetailUser')}>
         <Image style={styles.img} />
         <View>
           <Text style={styles.name}>Name</Text>

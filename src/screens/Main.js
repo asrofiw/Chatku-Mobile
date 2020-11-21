@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {Image, Modal, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, View} from 'native-base';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Import Pages
 import WelcomeScreen from './WelcomeScreen';
@@ -8,17 +11,15 @@ import Register from './Register';
 import ProfileInfo from './ProfileInfo';
 import TopTabs from './TopTabs';
 import ChatRoom from './ChatRoom';
-import {Image, Modal, StyleSheet, TouchableOpacity} from 'react-native';
-import {Text, View} from 'native-base';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DetailFriends from './DetailFriends';
+import SettingScreen from './SettingScreen';
 
 const Stack = createStackNavigator();
 
 const HeaderBackPhoto = (props) => {
   return (
     <View style={styles.parent}>
-      <Icon name="arrow-left" size={25} color="#ffffff" />
+      <Icon name="arrow-left" size={27} color="#ffffff" />
       <Image style={styles.headerBack} source={{uri: props.img}} />
     </View>
   );
@@ -35,14 +36,14 @@ const HeaderTitle = (props) => {
 const HeaderRight = () => {
   return (
     <View style={styles.headerRightOnRoom}>
-      <TouchableOpacity style={styles.rightIcon}>
-        <Icon name="video" size={25} color="#ffffff" />
+      <TouchableOpacity>
+        <Icon name="video" size={27} color="#ffffff" />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.rightIcon}>
-        <Icon name="phone" size={25} color="#ffffff" />
+      <TouchableOpacity>
+        <Icon name="phone" size={27} color="#ffffff" />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.rightIcon}>
-        <Icon name="dots-vertical" size={25} color="#ffffff" />
+      <TouchableOpacity>
+        <Icon name="dots-vertical" size={27} color="#ffffff" />
       </TouchableOpacity>
     </View>
   );
@@ -57,7 +58,7 @@ const HeaderRightProfileFriends = () => {
   return (
     <View>
       <TouchableOpacity onPress={showOptions}>
-        <Icon name="dots-vertical" size={25} color="#ffffff" />
+        <Icon name="dots-vertical" size={27} color="#ffffff" />
       </TouchableOpacity>
       <Modal animationType="none" transparent={true} visible={isShow}>
         <View style={styles.modalOptions}>
@@ -72,6 +73,54 @@ const HeaderRightProfileFriends = () => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.btnOptionsFriends}>
             <Text>Verify security code</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={showOptions}
+            style={styles.btnOptionsFriends}>
+            <Text>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    </View>
+  );
+};
+
+const HeaderRightMain = () => {
+  const navigation = useNavigation();
+  const [isShow, setIsShow] = useState(false);
+
+  const showOptions = () => {
+    setIsShow(!isShow);
+  };
+
+  const navigateTo = () => {
+    navigation.navigate('SettingScreen');
+    setIsShow(false);
+  };
+
+  return (
+    <View style={styles.headerRightMain}>
+      <TouchableOpacity>
+        <Icon name="magnify" size={27} color="#ffffff" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={showOptions}>
+        <Icon name="dots-vertical" size={27} color="#ffffff" />
+      </TouchableOpacity>
+      <Modal animationType="none" transparent={true} visible={isShow}>
+        <View style={styles.modalOptions}>
+          <TouchableOpacity style={styles.btnOptionsFriends}>
+            <Text>New Group</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnOptionsFriends}>
+            <Text>New Broadcast</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnOptionsFriends}>
+            <Text>Starred messages</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={navigateTo}
+            style={styles.btnOptionsFriends}>
+            <Text>Settings</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={showOptions}
@@ -109,6 +158,7 @@ const Main = () => {
             headerTintColor: '#ffffff',
             headerLeft: false,
             headerStyle: {backgroundColor: '#21978b', elevation: 0},
+            headerRight: () => <HeaderRightMain />,
           }}
           name="TopTabs"
           component={TopTabs}
@@ -148,6 +198,15 @@ const Main = () => {
           name="DetailFriends"
           component={DetailFriends}
         />
+        <Stack.Screen
+          options={() => ({
+            title: 'Settings',
+            headerTintColor: '#ffffff',
+            headerStyle: {backgroundColor: '#21978b', elevation: 0},
+          })}
+          name="SettingScreen"
+          component={SettingScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -179,9 +238,10 @@ const styles = StyleSheet.create({
   },
   headerRightOnRoom: {
     flexDirection: 'row',
-  },
-  rightIcon: {
-    marginRight: 15,
+    marginHorizontal: 10,
+    width: 120,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   btnOptionsFriends: {
     width: 180,
@@ -197,5 +257,12 @@ const styles = StyleSheet.create({
     width: '60%',
     position: 'absolute',
     right: 0,
+  },
+  headerRightMain: {
+    flexDirection: 'row',
+    marginHorizontal: 10,
+    width: 70,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });

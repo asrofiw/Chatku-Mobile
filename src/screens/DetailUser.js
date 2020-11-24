@@ -47,7 +47,7 @@ const DetailUser = () => {
           />
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.btnLast}>
+      <View style={styles.btnLast}>
         <Icon
           style={styles.iconLast}
           name="phone"
@@ -58,7 +58,7 @@ const DetailUser = () => {
           <Text style={styles.title}>Phone</Text>
           <Text style={styles.subTitle}>+62 822-2068-3981</Text>
         </View>
-      </TouchableOpacity>
+      </View>
     </View>
   );
 };

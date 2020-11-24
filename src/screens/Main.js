@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Image, Modal, StyleSheet, TouchableOpacity} from 'react-native';
-import {Text, View} from 'native-base';
+import {Text, View, Root} from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Import Pages
@@ -14,6 +14,8 @@ import ChatRoom from './ChatRoom';
 import DetailFriends from './DetailFriends';
 import SettingScreen from './SettingScreen';
 import DetailUser from './DetailUser';
+import ListContact from './ListContact';
+import {useSelector} from 'react-redux';
 
 const Stack = createStackNavigator();
 
@@ -135,90 +137,109 @@ const HeaderRightMain = () => {
 };
 
 const Main = () => {
+  const auth = useSelector((state) => state.auth);
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="WelcomeScreen"
-          component={WelcomeScreen}
-        />
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="Register"
-          component={Register}
-        />
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="ProfileInfo"
-          component={ProfileInfo}
-        />
-        <Stack.Screen
-          options={{
-            headerTitle: 'ChatKu',
-            headerTintColor: '#ffffff',
-            headerLeft: false,
-            headerStyle: {backgroundColor: '#21978b', elevation: 0},
-            headerRight: () => <HeaderRightMain />,
-          }}
-          name="TopTabs"
-          component={TopTabs}
-        />
-        <Stack.Screen
-          options={({navigation, route}) => ({
-            headerBackImage: () => <HeaderBackPhoto img={route.params.image} />,
-            headerTitle: () => (
-              <TouchableOpacity
-                style={styles.headerTitle}
-                onPress={() =>
-                  navigation.navigate('DetailFriends', {
-                    id: route.params.id,
-                    name: route.params.name,
-                    image: route.params.image,
-                  })
-                }>
-                <HeaderTitle name={route.params.name} />
-              </TouchableOpacity>
-            ),
-            headerRight: () => <HeaderRight />,
-            headerTintColor: '#ffffff',
-            headerStyle: {backgroundColor: '#21978b', elevation: 0},
-          })}
-          name="ChatRoom"
-          component={ChatRoom}
-        />
-        <Stack.Screen
-          options={({route}) => ({
-            headerTitle: route.params.name,
-            headerRight: () => <HeaderRightProfileFriends />,
-            headerRightContainerStyle: {marginRight: 10},
-            headerTransparent: true,
-            headerTintColor: '#ffffff',
-            headerStyle: {backgroundColor: '#21978b', elevation: 0},
-          })}
-          name="DetailFriends"
-          component={DetailFriends}
-        />
-        <Stack.Screen
-          options={() => ({
-            title: 'Settings',
-            headerTintColor: '#ffffff',
-            headerStyle: {backgroundColor: '#21978b', elevation: 0},
-          })}
-          name="SettingScreen"
-          component={SettingScreen}
-        />
-        <Stack.Screen
-          options={() => ({
-            title: 'Profile',
-            headerTintColor: '#ffffff',
-            headerStyle: {backgroundColor: '#21978b', elevation: 0},
-          })}
-          name="DetailUser"
-          component={DetailUser}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Root>
+      <NavigationContainer>
+        {!auth.isLogin ? (
+          <Stack.Navigator>
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="WelcomeScreen"
+              component={WelcomeScreen}
+            />
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Register"
+              component={Register}
+            />
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="ProfileInfo"
+              component={ProfileInfo}
+            />
+          </Stack.Navigator>
+        ) : (
+          <Stack.Navigator>
+            <Stack.Screen
+              options={{
+                headerTitle: 'ChatKu',
+                headerTintColor: '#ffffff',
+                headerLeft: false,
+                headerStyle: {backgroundColor: '#21978b', elevation: 0},
+                headerRight: () => <HeaderRightMain />,
+              }}
+              name="TopTabs"
+              component={TopTabs}
+            />
+            <Stack.Screen
+              options={() => ({
+                title: 'Contacts',
+                headerTintColor: '#ffffff',
+                headerStyle: {backgroundColor: '#21978b', elevation: 0},
+              })}
+              name="ListContact"
+              component={ListContact}
+            />
+            <Stack.Screen
+              options={({navigation, route}) => ({
+                headerBackImage: () => (
+                  <HeaderBackPhoto img={route.params.image} />
+                ),
+                headerTitle: () => (
+                  <TouchableOpacity
+                    style={styles.headerTitle}
+                    onPress={() =>
+                      navigation.navigate('DetailFriends', {
+                        id: route.params.id,
+                        name: route.params.name,
+                        image: route.params.image,
+                      })
+                    }>
+                    <HeaderTitle name={route.params.name} />
+                  </TouchableOpacity>
+                ),
+                headerRight: () => <HeaderRight />,
+                headerTintColor: '#ffffff',
+                headerStyle: {backgroundColor: '#21978b', elevation: 0},
+              })}
+              name="ChatRoom"
+              component={ChatRoom}
+            />
+            <Stack.Screen
+              options={({route}) => ({
+                headerTitle: route.params.name,
+                headerRight: () => <HeaderRightProfileFriends />,
+                headerRightContainerStyle: {marginRight: 10},
+                headerTransparent: true,
+                headerTintColor: '#ffffff',
+                headerStyle: {backgroundColor: '#21978b', elevation: 0},
+              })}
+              name="DetailFriends"
+              component={DetailFriends}
+            />
+            <Stack.Screen
+              options={() => ({
+                title: 'Settings',
+                headerTintColor: '#ffffff',
+                headerStyle: {backgroundColor: '#21978b', elevation: 0},
+              })}
+              name="SettingScreen"
+              component={SettingScreen}
+            />
+            <Stack.Screen
+              options={() => ({
+                title: 'Profile',
+                headerTintColor: '#ffffff',
+                headerStyle: {backgroundColor: '#21978b', elevation: 0},
+              })}
+              name="DetailUser"
+              component={DetailUser}
+            />
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
+    </Root>
   );
 };
 

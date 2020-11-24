@@ -32,33 +32,17 @@ export default (state = initialState, action) => {
         isError: false,
         isLoading: false,
         alertMsg: action.payload.data.message,
+      };
+    }
+    case 'LOGIN_USER': {
+      return {
+        ...state,
         isLogin: true,
-      };
-    }
-    case 'REGISTER_PENDING': {
-      return {
-        ...state,
-        isLoading: true,
-      };
-    }
-    case 'REGISTER_REJECTED': {
-      return {
-        ...state,
-        isLoading: false,
-        isError: true,
-        alertMsg: action.payload.response.data.message,
-      };
-    }
-    case 'REGISTER_FULFILLED': {
-      return {
-        ...state,
-        isLoading: false,
-        isSuccess: true,
-        alertMsg: action.payload.data.message,
       };
     }
     case 'LOGOUT_USER': {
       return {
+        ...state,
         isLogin: false,
         token: '',
         isError: false,

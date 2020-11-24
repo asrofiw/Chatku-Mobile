@@ -1,16 +1,46 @@
-import React, {useState} from 'react';
-import {Button, Input, Item, Label, Text, View} from 'native-base';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {Button, Input, Item, Label, Text, Toast, View} from 'native-base';
 import {Keyboard, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {useNavigation} from '@react-navigation/native';
 
+// Import Action
+import authAction from '../redux/actions/auth';
+
 const Register = () => {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const navigation = useNavigation();
+
   const [country, setCountry] = useState('Indonesia');
   const [codeCountry, setcodeCountry] = useState('62');
+  const [number, setNumber] = useState('');
   const onCountryChange = (value) => {
     setCountry(value);
     onCodeCountry(value);
   };
+
+  const onRegister = () => {
+    const data = {
+      phone: codeCountry + number,
+    };
+    dispatch(authAction.register(data));
+  };
+
+  useEffect(() => {
+    const {isSuccess, isError, alertMsg} = auth;
+    if (isError) {
+      Toast.show({
+        text: alertMsg,
+        buttonText: 'OK',
+      });
+      dispatch(authAction.clearMessage());
+    } else if (isSuccess) {
+      navigation.navigate('ProfileInfo');
+      dispatch(authAction.clearMessage());
+    }
+  });
 
   const onCodeCountry = (value) => {
     switch (value) {
@@ -34,7 +64,6 @@ const Register = () => {
     }
   };
 
-  const navigation = useNavigation();
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.parent}>
@@ -71,14 +100,13 @@ const Register = () => {
                 keyboardType="phone-pad"
                 placeholder="phone number"
                 placeholderTextColor="#b4b6b6"
+                value={number}
+                onChangeText={(value) => setNumber(value)}
               />
             </Item>
           </View>
         </View>
-        <Button
-          full
-          style={styles.btnNext}
-          onPress={() => navigation.navigate('ProfileInfo')}>
+        <Button full style={styles.btnNext} onPress={onRegister}>
           <Text>Next</Text>
         </Button>
       </View>

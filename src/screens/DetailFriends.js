@@ -67,7 +67,7 @@ const DetailFriends = ({route}) => {
         <TouchableOpacity style={styles.btnWrapper}>
           <Text>Mute notifications</Text>
           <Switch
-            trackColor={{false: '#767577', true: '#81b0ff'}}
+            trackColor={{false: '#767577', true: '#128C7E50'}}
             thumbColor={isEnabled ? '#128C7E' : '#f4f3f4'}
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleSwitch}

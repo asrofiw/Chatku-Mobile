@@ -4,18 +4,18 @@ const initialStateProfile = {
   isError: false,
   alertMsg: '',
   statusMsg: '',
-  dataProfile: {},
+  dataFriends: {},
 };
 
 export default (state = initialStateProfile, action) => {
   switch (action.type) {
-    case 'GET_USER_PENDING': {
+    case 'GET_FRIENDS_PENDING': {
       return {
         ...state,
         isLoading: true,
       };
     }
-    case 'GET_USER_REJECTED': {
+    case 'GET_FRIENDS_REJECTED': {
       return {
         ...state,
         isSuccess: false,
@@ -25,7 +25,7 @@ export default (state = initialStateProfile, action) => {
         alertMsg: action.payload.response.data.message,
       };
     }
-    case 'GET_USER_FULFILLED': {
+    case 'GET_FRIENDS_FULFILLED': {
       return {
         ...state,
         isLoading: false,
@@ -33,34 +33,7 @@ export default (state = initialStateProfile, action) => {
         isSuccess: true,
         statusMsg: 'Succes',
         alertMsg: action.payload.data.message,
-        dataProfile: action.payload.data.data,
-      };
-    }
-    case 'UPDATE_USER_PENDING': {
-      return {
-        ...state,
-        isLoading: true,
-      };
-    }
-    case 'UPDATE_USER_REJECTED': {
-      return {
-        ...state,
-        isSuccess: false,
-        isLoading: false,
-        isError: true,
-        statusMsg: 'Failed',
-        alertMsg: 'Failed to update data',
-      };
-    }
-    case 'UPDATE_USER_FULFILLED': {
-      return {
-        ...state,
-        isLoading: false,
-        isError: false,
-        isSuccess: true,
-        statusMsg: 'Succes',
-        alertMsg: action.payload.data.message,
-        dataProfile: action.payload.data.results,
+        dataFriends: action.payload.data.results,
       };
     }
     case 'CLEAR_MESSAGE': {

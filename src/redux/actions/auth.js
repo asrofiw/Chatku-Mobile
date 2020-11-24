@@ -2,13 +2,12 @@ import qs from 'querystring';
 import http from '../../helpers/http';
 
 export default {
-  login: (data) => ({
+  register: (data) => ({
     type: 'AUTH_USER',
     payload: http().post('auth/login', qs.stringify(data)),
   }),
-  register: (data) => ({
-    type: 'REGISTER',
-    payload: http().post('auth/register/customer', qs.stringify(data)),
+  login: () => ({
+    type: 'LOGIN_USER',
   }),
   logout: () => ({
     type: 'LOGOUT_USER',

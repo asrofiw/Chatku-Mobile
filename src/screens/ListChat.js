@@ -120,6 +120,7 @@ const RenderItem = ({dataChats}) => {
 };
 
 const Chat = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.parent}>
       <FlatList
@@ -128,7 +129,10 @@ const Chat = () => {
         renderItem={({item}) => <RenderItem dataChats={item} />}
         keyExtractor={(item) => item.id.toString()}
       />
-      <Button rounded style={styles.btnContact}>
+      <Button
+        rounded
+        style={styles.btnContact}
+        onPress={() => navigation.navigate('ListContact')}>
         <Icon name="chat" size={30} color="#ffffff" />
       </Button>
     </View>

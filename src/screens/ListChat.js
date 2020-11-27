@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'native-base';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -10,123 +11,105 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useDispatch, useSelector} from 'react-redux';
+import moment from 'moment';
+import socket from '../helpers/socket';
+import jwtDecode from 'jwt-decode';
 
-const DATA = [
-  {
-    id: 1,
-    image: 'https://image.flaticon.com/icons/png/512/147/147144.png',
-    name: 'Asrofi',
-    chatPlaceholder: 'Hows your day?',
-    date: '3:10 PM',
-  },
-  {
-    id: 2,
-    image: 'https://image.flaticon.com/icons/png/512/147/147144.png',
-    name: 'Asrofi',
-    chatPlaceholder: 'Hows your day?',
-    date: '3:10 PM',
-  },
-  {
-    id: 3,
-    image: 'https://image.flaticon.com/icons/png/512/147/147144.png',
-    name: 'Asrofi',
-    chatPlaceholder: 'Hows your day?',
-    date: '3:10 PM',
-  },
-  {
-    id: 4,
-    image: 'https://image.flaticon.com/icons/png/512/147/147144.png',
-    name: 'Asrofi',
-    chatPlaceholder: 'Hows your day?',
-    date: '3:10 PM',
-  },
-  {
-    id: 5,
-    image: 'https://image.flaticon.com/icons/png/512/147/147144.png',
-    name: 'Asrofi',
-    chatPlaceholder: 'Hows your day?',
-    date: '3:10 PM',
-  },
-  {
-    id: 6,
-    image: 'https://image.flaticon.com/icons/png/512/147/147144.png',
-    name: 'Asrofi',
-    chatPlaceholder: 'Hows your day?',
-    date: '3:10 PM',
-  },
-  {
-    id: 7,
-    image: 'https://image.flaticon.com/icons/png/512/147/147144.png',
-    name: 'Asrofi',
-    chatPlaceholder: 'Hows your day?',
-    date: '3:10 PM',
-  },
-  {
-    id: 8,
-    image: 'https://image.flaticon.com/icons/png/512/147/147144.png',
-    name: 'Asrofi',
-    chatPlaceholder: 'Hows your day?',
-    date: '3:10 PM',
-  },
-  {
-    id: 9,
-    image: 'https://image.flaticon.com/icons/png/512/147/147144.png',
-    name: 'Asrofi',
-    chatPlaceholder:
-      'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-    date: '3:10 PM',
-  },
-  {
-    id: 10,
-    image: 'https://image.flaticon.com/icons/png/512/147/147144.png',
-    name: 'Asrofi',
-    chatPlaceholder: 'Hows your day?',
-    date: '3:10 PM',
-  },
-];
+// Import action
+import messagesAction from '../redux/actions/messages';
 
-const RenderItem = ({dataChats}) => {
+const RenderItem = ({dataChats, userLogin}) => {
   const navigation = useNavigation();
+  let dataUserFriend = {};
+  if (dataChats.User.id !== userLogin.id) {
+    dataUserFriend = dataChats.User;
+  }
   return (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ChatRoom', {
-          id: dataChats.id,
-          image: dataChats.image,
-          name: dataChats.name,
-        })
-      }>
-      <View style={styles.wrapperChats}>
-        <Image style={styles.img} source={{uri: dataChats.image}} />
-        <View style={styles.content}>
-          <View style={styles.topContent}>
-            <Text style={styles.name}>{dataChats.name}</Text>
-            <Text style={styles.date}>{dataChats.date}</Text>
-          </View>
-          <View>
-            {dataChats.chatPlaceholder.length < 30 && (
-              <Text style={styles.message}>{dataChats.chatPlaceholder}</Text>
-            )}
-            {dataChats.chatPlaceholder.length > 30 && (
-              <Text style={styles.message}>
-                {dataChats.chatPlaceholder.substring(0, 30).concat('...')}
+    <View>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('ChatRoom', {
+            id: dataUserFriend.id,
+            name: dataUserFriend.name,
+            phone: dataUserFriend.phone,
+            avatar: dataUserFriend.avatar,
+          })
+        }>
+        <View style={styles.wrapperChats}>
+          <Image
+            style={styles.img}
+            source={
+              dataUserFriend.avatar
+                ? {uri: dataUserFriend.avatar}
+                : require('../assests/images/default-avatar1.png')
+            }
+          />
+          <View style={styles.content}>
+            <View style={styles.topContent}>
+              {dataUserFriend.name ? (
+                <Text style={styles.name}>{dataUserFriend.name}</Text>
+              ) : (
+                <Text style={styles.name}>+ {dataUserFriend.phone}</Text>
+              )}
+              <Text style={styles.date}>
+                {moment.utc(dataChats.createdAt).local().calendar({
+                  sameDay: 'hh:mm A',
+                  lastDay: '[Yesterday]',
+                  sameElse: 'DD/MM/YYY',
+                })}
               </Text>
-            )}
+            </View>
+            <View>
+              {dataChats.message.length < 30 && (
+                <Text style={styles.message}>{dataChats.message}</Text>
+              )}
+              {dataChats.message.length > 30 && (
+                <Text style={styles.message}>
+                  {dataChats.message.substring(0, 30).concat('...')}
+                </Text>
+              )}
+            </View>
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const Chat = () => {
+  const [loading, setLoading] = useState(false);
+  const auth = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.user);
+  const {token} = auth;
+  const messages = useSelector((state) => state.messages);
+  const {listOfChats} = messages;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(messagesAction.getListOfChats(token));
+    socket.on(token, () => {
+      dispatch(messagesAction.getListOfChats(token));
+    });
+    return () => {
+      socket.close();
+    };
+  }, []);
+  const getData = () => {
+    setLoading(true);
+    dispatch(messagesAction.getListOfChats(token));
+    setLoading(false);
+  };
   const navigation = useNavigation();
   return (
     <View style={styles.parent}>
       <FlatList
+        refreshing={loading}
+        onRefresh={getData}
         showsVerticalScrollIndicator={false}
-        data={DATA}
-        renderItem={({item}) => <RenderItem dataChats={item} />}
+        data={listOfChats}
+        renderItem={({item}) => (
+          <RenderItem dataChats={item} userLogin={user.dataProfile} />
+        )}
         keyExtractor={(item) => item.id.toString()}
       />
       <Button
@@ -156,6 +139,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     height: 70,
     width: 70,
+    borderRadius: 70 / 2,
     marginRight: 10,
   },
   content: {

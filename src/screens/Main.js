@@ -1,9 +1,19 @@
 import React, {useState} from 'react';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Image, Modal, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Image,
+  Modal,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import {Text, View, Root} from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useDispatch, useSelector} from 'react-redux';
+
+// import action
+import messagesAction from '../redux/actions/messages';
 
 // Import Pages
 import WelcomeScreen from './WelcomeScreen';
@@ -15,16 +25,30 @@ import DetailFriends from './DetailFriends';
 import SettingScreen from './SettingScreen';
 import DetailUser from './DetailUser';
 import ListContact from './ListContact';
-import {useSelector} from 'react-redux';
 
 const Stack = createStackNavigator();
 
 const HeaderBackPhoto = (props) => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const onBack = () => {
+    dispatch(messagesAction.getListOfChats(props.token));
+    setTimeout(() => {
+      navigation.navigate('TopTabs');
+    });
+  };
   return (
-    <View style={styles.parent}>
+    <TouchableOpacity style={styles.parent} onPress={onBack}>
       <Icon name="arrow-left" size={27} color="#ffffff" />
-      <Image style={styles.headerBack} source={{uri: props.img}} />
-    </View>
+      <Image
+        style={styles.headerBack}
+        source={
+          props.img
+            ? {uri: props.img}
+            : require('../assests/images/default-avatar1.png')
+        }
+      />
+    </TouchableOpacity>
   );
 };
 
@@ -141,6 +165,7 @@ const Main = () => {
   return (
     <Root>
       <NavigationContainer>
+        <StatusBar backgroundColor="#075E54" barStyle="light-content" />
         {!auth.isLogin ? (
           <Stack.Navigator>
             <Stack.Screen
@@ -184,7 +209,10 @@ const Main = () => {
             <Stack.Screen
               options={({navigation, route}) => ({
                 headerBackImage: () => (
-                  <HeaderBackPhoto img={route.params.image} />
+                  <HeaderBackPhoto
+                    img={route.params.avatar}
+                    token={auth.token}
+                  />
                 ),
                 headerTitle: () => (
                   <TouchableOpacity
@@ -193,10 +221,17 @@ const Main = () => {
                       navigation.navigate('DetailFriends', {
                         id: route.params.id,
                         name: route.params.name,
-                        image: route.params.image,
+                        avatar: route.params.avatar,
+                        phone: route.params.phone,
                       })
                     }>
-                    <HeaderTitle name={route.params.name} />
+                    <HeaderTitle
+                      name={
+                        route.params.name
+                          ? route.params.name
+                          : `+ ${route.params.phone}`
+                      }
+                    />
                   </TouchableOpacity>
                 ),
                 headerRight: () => <HeaderRight />,
@@ -208,10 +243,11 @@ const Main = () => {
             />
             <Stack.Screen
               options={({route}) => ({
-                headerTitle: route.params.name,
+                headerTitle: route.params.name
+                  ? route.params.name
+                  : `+ ${route.params.phone}`,
                 headerRight: () => <HeaderRightProfileFriends />,
                 headerRightContainerStyle: {marginRight: 10},
-                headerTransparent: true,
                 headerTintColor: '#ffffff',
                 headerStyle: {backgroundColor: '#21978b', elevation: 0},
               })}

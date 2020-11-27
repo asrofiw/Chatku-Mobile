@@ -13,6 +13,8 @@ export default (state = initialStateProfile, action) => {
       return {
         ...state,
         isLoading: true,
+        isSuccess: false,
+        isError: false,
       };
     }
     case 'GET_USER_REJECTED': {
@@ -33,7 +35,7 @@ export default (state = initialStateProfile, action) => {
         isSuccess: true,
         statusMsg: 'Succes',
         alertMsg: action.payload.data.message,
-        dataProfile: action.payload.data.data,
+        dataProfile: action.payload.data.results,
       };
     }
     case 'UPDATE_USER_PENDING': {

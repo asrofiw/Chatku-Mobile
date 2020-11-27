@@ -12,12 +12,20 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const DetailFriends = ({route}) => {
+  console.log(route);
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.parent}>
       <View style={styles.wrapperImage}>
-        <Image style={styles.img} source={{uri: route.params.image}} />
+        <Image
+          style={styles.img}
+          source={
+            route.params.avatar
+              ? {uri: route.params.avatar}
+              : require('../assests/images/default-avatar1.png')
+          }
+        />
       </View>
       <View style={styles.wrapper}>
         <TouchableOpacity style={styles.topMedia}>
@@ -113,7 +121,7 @@ const DetailFriends = ({route}) => {
         <View style={styles.wrapperInfo}>
           <TouchableOpacity style={styles.btnPhone}>
             <View style={styles.wrapperInfoLeft}>
-              <Text>+ 62 822-2063-2981</Text>
+              <Text>{`+ ${route.params.phone}`}</Text>
               <Text style={styles.subText}>Mobile</Text>
             </View>
           </TouchableOpacity>
@@ -165,7 +173,7 @@ const styles = StyleSheet.create({
   },
   wrapperImage: {
     height: 300,
-    backgroundColor: '#128C7E',
+    backgroundColor: '#9b9b9b50',
     justifyContent: 'center',
     alignItems: 'center',
   },

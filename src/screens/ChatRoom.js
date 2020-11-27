@@ -1,5 +1,6 @@
-import {Button, Input, Item, Text} from 'native-base';
-import React, {useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {Button, Input, Item, Text, Toast} from 'native-base';
+import React, {useEffect, useState} from 'react';
 import {
   Keyboard,
   StyleSheet,
@@ -9,104 +10,113 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useDispatch, useSelector} from 'react-redux';
+import moment from 'moment';
+import jwtDecode from 'jwt-decode';
+import socket from '../helpers/socket';
 
-const Chat = [
-  {
-    id: 1,
-    myChat: 'abababasdadnfkjnvjnvjnfvnrfdnlkjnlniuhiuhngvhhcs',
-    theirChat: '',
-    date: '',
-  },
-  {
-    id: 2,
-    myChat: '',
-    theirChat: 'abababasdadnfkjnvjnvjnfvnrfdnlkjnlniuhiuhngvhhcs',
-    date: '',
-  },
-  {
-    id: 3,
-    myChat: 'abababasdadnfkjnvjnvjnfvnrfdnlkjnlniuhiuhngvhhcs',
-    theirChat: '',
-    date: '',
-  },
-  {
-    id: 4,
-    myChat: '',
-    theirChat: 'abababasdadnfkjnvjnvjnfvnrfdnlkjnlniuhiuhngvhhcs',
-    date: '',
-  },
-  {
-    id: 5,
-    myChat: 'abababasdadnfkjnvjnvjnfvnrfdnlkjnlniuhiuhngvhhcs',
-    theirChat: '',
-    date: '',
-  },
-  {
-    id: 6,
-    myChat: '',
-    theirChat: 'abababasdadnfkjnvjnvjnfvnrfdnlkjnlniuhiuhngvhhcs',
-    date: '',
-  },
-  {
-    id: 7,
-    myChat: 'abababasdadnfkjnvjnvjnfvnrfdnlkjnlniuhiuhngvhhcs',
-    theirChat: '',
-    date: '',
-  },
-  {
-    id: 8,
-    myChat: '',
-    theirChat: 'abababasdadnfkjnvjnvjnfvnrfdnlkjnlniuhiuhngvhhcs',
-    date: '',
-  },
-  {
-    id: 9,
-    myChat: 'abababasdadnfkjnvjnvjnfvnrfdnlkjnlniuhiuhngvhhcs',
-    theirChat: '',
-    date: '',
-  },
-  {
-    id: 10,
-    myChat: '',
-    theirChat: 'abababasdadnfkjnvjnvjnfvnrfdnlkjnlniuhiuhngvhhcs',
-    date: '',
-  },
-];
+// Import action
+import messagesAction from '../redux/actions/messages';
+
+const RenderChat = ({chat, idFriend}) => {
+  return (
+    <View>
+      {chat.belongsToId === idFriend.id ? (
+        <View style={styles.theirChat}>
+          <Text>{chat.message}</Text>
+          <Text style={styles.date}>
+            {moment.utc(chat.createdAt).local().format('hh:mm A')}
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.myChat}>
+          <Text>{chat.message}</Text>
+          <Text style={styles.date}>
+            {moment.utc(chat.createdAt).local().format('hh:mm A')}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
 
 const ChatRoom = ({route}) => {
+  const auth = useSelector((state) => state.auth);
+  const messages = useSelector((state) => state.messages);
+  const [loading, setLoading] = useState(false);
+  const {token} = auth;
+  const {detailChats} = messages;
+  const {id} = route.params;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(messagesAction.getDetailChats(token, id));
+    dispatch(messagesAction.clearMessage());
+    socket.on(token, () => {
+      dispatch(messagesAction.getDetailChats(token, id));
+      dispatch(messagesAction.clearMessage());
+    });
+    return () => {
+      socket.close();
+    };
+  }, []);
   const [message, setMessage] = useState('');
   const isTyping = (value) => {
     setMessage(value);
   };
-  console.log(route.params);
 
-  const RenderChat = ({chat}) => {
-    return (
-      <View>
-        {chat.myChat.length > 0 && (
-          <View style={styles.myChat}>
-            <Text>{chat.myChat}</Text>
-            <Text style={styles.date}>3:10 PM</Text>
-          </View>
-        )}
-        {chat.theirChat.length > 0 && (
-          <View style={styles.theirChat}>
-            <Text>{chat.theirChat}</Text>
-            <Text style={styles.date}>3:10 PM</Text>
-          </View>
-        )}
-      </View>
-    );
+  const decode = jwtDecode(token);
+
+  const onPostMessage = () => {
+    const data = {
+      message,
+    };
+    dispatch(messagesAction.postMessage(token, id, data));
+    setMessage('');
+    setTimeout(() => {
+      onRefresh();
+    });
+  };
+
+  const onRefresh = () => {
+    const {isSuccess, isError, alertMsg} = messages;
+    if (isError) {
+      Toast.show({
+        text: alertMsg,
+        buttonText: 'Ok',
+      });
+    } else if (isSuccess) {
+      dispatch(messagesAction.getDetailChats(token, id));
+      dispatch(messagesAction.clearMessage());
+    }
+  };
+
+  const onNextPage = () => {
+    const {pathNext} = messages.pageInfo;
+    if (pathNext) {
+      dispatch(messagesAction.getDataNextPage(token, pathNext));
+    }
+  };
+
+  const getData = () => {
+    setLoading(true);
+    dispatch(messagesAction.getDetailChats(token, id));
+    dispatch(messagesAction.clearMessage());
+    setLoading(false);
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.parent}>
         <FlatList
+          inverted={true}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.containerStyle}
-          data={Chat}
-          renderItem={({item}) => <RenderChat chat={item} />}
+          onEndReached={onNextPage}
+          onEndReachedThreshold={0.5}
+          refreshing={loading}
+          onRefresh={getData}
+          data={detailChats}
+          renderItem={({item}) => <RenderChat chat={item} idFriend={decode} />}
           keyExtractor={(item) => item.id.toString()}
         />
         <View style={styles.bottom}>
@@ -144,14 +154,16 @@ const ChatRoom = ({route}) => {
               </View>
             )}
           </Item>
-          <Button rounded style={styles.btnMic}>
-            {message.length > 0 && (
+          {message.length > 0 && (
+            <Button rounded style={styles.btnMic} onPress={onPostMessage}>
               <IconFontAwesome name="send" size={25} color="#ffffff" />
-            )}
-            {!message.length && (
+            </Button>
+          )}
+          {!message.length && (
+            <Button rounded style={styles.btnMic}>
               <Icon name="microphone" size={25} color="#ffffff" />
-            )}
-          </Button>
+            </Button>
+          )}
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -171,7 +183,8 @@ const styles = StyleSheet.create({
   },
   myChat: {
     alignSelf: 'flex-start',
-    width: '80%',
+    maxWidth: '80%',
+    // minWidth: '30%',
     marginLeft: 20,
     backgroundColor: '#ffffff',
     padding: 10,
@@ -185,7 +198,8 @@ const styles = StyleSheet.create({
   },
   theirChat: {
     alignSelf: 'flex-end',
-    width: '80%',
+    maxWidth: '80%',
+    // minWidth: '30%',
     marginRight: 20,
     backgroundColor: '#DCF8C6',
     padding: 10,
@@ -201,9 +215,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     alignSelf: 'flex-end',
     color: '#9b9b9b',
-    bottom: '15%',
-    right: '5%',
-    position: 'absolute',
   },
   bottom: {
     flexDirection: 'row',

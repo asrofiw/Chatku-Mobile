@@ -23,7 +23,6 @@ const ProfileInfo = () => {
   const onChangeName = (value) => {
     setName(value);
   };
-  console.log(avatar);
 
   const chooseAvatar = () => {
     const option = {

@@ -65,7 +65,7 @@ export default (state = initialStateProfile, action) => {
         isSuccess: true,
         statusMsg: 'Succes',
         alertMsg: action.payload.data.message,
-        detailChats: action.payload.data.result,
+        detailChats: action.payload.data.results,
         pageInfo: action.payload.data.pageInfo,
       };
     }

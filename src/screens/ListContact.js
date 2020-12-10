@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {
@@ -58,7 +59,9 @@ const ListContact = () => {
   const dispatch = useDispatch();
   const {token} = auth;
   useEffect(() => {
-    dispatch(friendsAction.getFriends(token));
+    dispatch(friendsAction.getFriends(token)).catch((e) =>
+      console.log(e.message),
+    );
     if (friends.isSuccess) {
       dispatch(friendsAction.clearMessage());
     }

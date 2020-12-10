@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {Button, Input, Item, Text, Toast} from 'native-base';
+import {Button, Input, Item, Toast} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {
   Keyboard,
@@ -11,60 +11,39 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
-import moment from 'moment';
 import jwtDecode from 'jwt-decode';
 import socket from '../helpers/socket';
 
 // Import action
 import messagesAction from '../redux/actions/messages';
 
-const RenderChat = ({chat, idFriend}) => {
-  return (
-    <View>
-      {chat.belongsToId === idFriend.id ? (
-        <View style={styles.theirChat}>
-          <Text>{chat.message}</Text>
-          <Text style={styles.date}>
-            {moment.utc(chat.createdAt).local().format('hh:mm A')}
-          </Text>
-        </View>
-      ) : (
-        <View style={styles.myChat}>
-          <Text>{chat.message}</Text>
-          <Text style={styles.date}>
-            {moment.utc(chat.createdAt).local().format('hh:mm A')}
-          </Text>
-        </View>
-      )}
-    </View>
-  );
-};
+// Import Component render
+import RenderChatRoom from '../Components/RenderChatRoom';
 
 const ChatRoom = ({route}) => {
   const auth = useSelector((state) => state.auth);
   const messages = useSelector((state) => state.messages);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
   const {token} = auth;
   const {detailChats} = messages;
   const {id} = route.params;
+  const decode = jwtDecode(token);
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(messagesAction.getDetailChats(token, id));
-    dispatch(messagesAction.clearMessage());
-    socket.on(token, () => {
+    socket.on(decode.id, () => {
       dispatch(messagesAction.getDetailChats(token, id));
-      dispatch(messagesAction.clearMessage());
     });
-    return () => {
-      socket.close();
-    };
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, []);
-  const [message, setMessage] = useState('');
+
   const isTyping = (value) => {
     setMessage(value);
   };
-
-  const decode = jwtDecode(token);
 
   const onPostMessage = () => {
     const data = {
@@ -94,6 +73,7 @@ const ChatRoom = ({route}) => {
     const {pathNext} = messages.pageInfo;
     if (pathNext) {
       dispatch(messagesAction.getDataNextPage(token, pathNext));
+      dispatch(messagesAction.clearMessage());
     }
   };
 
@@ -116,7 +96,9 @@ const ChatRoom = ({route}) => {
           refreshing={loading}
           onRefresh={getData}
           data={detailChats}
-          renderItem={({item}) => <RenderChat chat={item} idFriend={decode} />}
+          renderItem={({item}) => (
+            <RenderChatRoom chat={item} userIdLogin={decode.id} />
+          )}
           keyExtractor={(item) => item.id.toString()}
         />
         <View style={styles.bottom}>
@@ -180,41 +162,6 @@ const styles = StyleSheet.create({
   imgBg: {
     width: '100%',
     height: '100%',
-  },
-  myChat: {
-    alignSelf: 'flex-start',
-    maxWidth: '80%',
-    // minWidth: '30%',
-    marginLeft: 20,
-    backgroundColor: '#ffffff',
-    padding: 10,
-    borderRadius: 10,
-    shadowColor: '#ffffff',
-    shadowOffset: {width: 5, height: 5},
-    shadowOpacity: 10,
-    shadowRadius: 5,
-    elevation: 5,
-    marginVertical: 10,
-  },
-  theirChat: {
-    alignSelf: 'flex-end',
-    maxWidth: '80%',
-    // minWidth: '30%',
-    marginRight: 20,
-    backgroundColor: '#DCF8C6',
-    padding: 10,
-    borderRadius: 10,
-    shadowColor: '#ffffff',
-    shadowOffset: {width: 5, height: 5},
-    shadowOpacity: 10,
-    shadowRadius: 5,
-    elevation: 5,
-    marginVertical: 10,
-  },
-  date: {
-    fontSize: 10,
-    alignSelf: 'flex-end',
-    color: '#9b9b9b',
   },
   bottom: {
     flexDirection: 'row',

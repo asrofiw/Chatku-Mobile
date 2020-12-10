@@ -8,12 +8,14 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import {Text, View, Root} from 'native-base';
+import {Text, View, Root, Item, Input} from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
+import {HeaderBackButton} from '@react-navigation/stack';
 
 // import action
 import messagesAction from '../redux/actions/messages';
+import userAction from '../redux/actions/user';
 
 // Import Pages
 import WelcomeScreen from './WelcomeScreen';
@@ -25,6 +27,7 @@ import DetailFriends from './DetailFriends';
 import SettingScreen from './SettingScreen';
 import DetailUser from './DetailUser';
 import ListContact from './ListContact';
+import SearchUsers from './SearchUsers';
 
 const Stack = createStackNavigator();
 
@@ -45,7 +48,7 @@ const HeaderBackPhoto = (props) => {
         source={
           props.img
             ? {uri: props.img}
-            : require('../assests/images/default-avatar1.png')
+            : require('../../assets/images/default-avatar1.png')
         }
       />
     </TouchableOpacity>
@@ -160,8 +163,24 @@ const HeaderRightMain = () => {
   );
 };
 
+const HeaderSearch = (props) => {
+  return (
+    <View style={styles.headerSearch}>
+      <TouchableOpacity onPress={props.onPressMagnify}>
+        <Icon name="magnify" size={27} color="#ffffff" />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const Main = () => {
+  const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
+  const [inputSearch, setInputSearch] = useState(false);
+  const [search, setSearch] = useState('');
+  const setValueSearch = (value) => {
+    setSearch(value);
+  };
   return (
     <Root>
       <NavigationContainer>
@@ -205,6 +224,56 @@ const Main = () => {
               })}
               name="ListContact"
               component={ListContact}
+            />
+            <Stack.Screen
+              options={({navigation}) =>
+                inputSearch
+                  ? {
+                      headerLeft: () => (
+                        <HeaderBackButton
+                          onPress={() => (setInputSearch(false), setSearch(''))}
+                          tintColor="#21978b"
+                        />
+                      ),
+                      headerTitle: () => (
+                        <View>
+                          <Item regular style={styles.itemInputSearch}>
+                            <Input
+                              placeholder="Search..."
+                              value={search}
+                              onChangeText={setValueSearch}
+                              onSubmitEditing={() =>
+                                navigation.replace('SearchUsers', {
+                                  search: search,
+                                })
+                              }
+                            />
+                          </Item>
+                        </View>
+                      ),
+                    }
+                  : {
+                      title: 'Search Users',
+                      headerTintColor: '#ffffff',
+                      headerStyle: {backgroundColor: '#21978b', elevation: 0},
+                      headerRight: () => (
+                        <HeaderSearch
+                          onPressMagnify={() => setInputSearch(true)}
+                        />
+                      ),
+                      headerLeft: () => (
+                        <HeaderBackButton
+                          onPress={() => (
+                            navigation.goBack(),
+                            dispatch(userAction.clearResultSearch())
+                          )}
+                          tintColor="#ffffff"
+                        />
+                      ),
+                    }
+              }
+              name="SearchUsers"
+              component={SearchUsers}
             />
             <Stack.Screen
               options={({navigation, route}) => ({
@@ -331,5 +400,11 @@ const styles = StyleSheet.create({
     width: 70,
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  headerSearch: {
+    marginRight: 20,
+  },
+  itemInputSearch: {
+    borderColor: '#ffffff',
   },
 });

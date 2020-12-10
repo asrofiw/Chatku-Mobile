@@ -23,7 +23,7 @@ const DetailFriends = ({route}) => {
           source={
             route.params.avatar
               ? {uri: route.params.avatar}
-              : require('../assests/images/default-avatar1.png')
+              : require('../../assets/images/default-avatar1.png')
           }
         />
       </View>

@@ -33,7 +33,7 @@ const RenderItem = ({dataContact}) => {
           source={
             dataContact.avatar
               ? {uri: dataContact.avatar}
-              : require('../assests/images/default-avatar1.png')
+              : require('../../assets/images/default-avatar1.png')
           }
         />
         <View style={styles.content}>
@@ -54,6 +54,7 @@ const RenderItem = ({dataContact}) => {
 };
 
 const ListContact = () => {
+  const navigation = useNavigation();
   const auth = useSelector((state) => state.auth);
   const friends = useSelector((state) => state.friends);
   const dispatch = useDispatch();
@@ -66,17 +67,16 @@ const ListContact = () => {
       dispatch(friendsAction.clearMessage());
     }
   }, []);
-  console.log(friends);
   const {dataFriends} = friends;
   return (
     <View style={styles.parent}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('SearchUsers')}>
         <View style={styles.wrapperChats}>
           <View style={styles.wrapperIcon}>
-            <Icon name="account-plus" size={30} color="#ffffff" />
+            <Icon name="magnify" size={30} color="#ffffff" />
           </View>
           <View style={styles.content}>
-            <Text style={styles.name}>Add friend</Text>
+            <Text style={styles.name}>Search</Text>
           </View>
         </View>
       </TouchableOpacity>

@@ -32,9 +32,13 @@ const ChatRoom = ({route}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(messagesAction.getDetailChats(token, id));
+    dispatch(messagesAction.getDetailChats(token, id)).catch((e) =>
+      console.log(e.message),
+    );
     socket.on(decode.id, () => {
-      dispatch(messagesAction.getDetailChats(token, id));
+      dispatch(messagesAction.getDetailChats(token, id)).catch((e) =>
+        console.log(e.message),
+      );
     });
     // return () => {
     //   socket.disconnect();

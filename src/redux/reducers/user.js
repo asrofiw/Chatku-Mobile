@@ -5,6 +5,7 @@ const initialStateProfile = {
   alertMsg: '',
   statusMsg: '',
   dataProfile: {},
+  resultSearch: [],
 };
 
 export default (state = initialStateProfile, action) => {
@@ -65,6 +66,33 @@ export default (state = initialStateProfile, action) => {
         dataProfile: action.payload.data.results,
       };
     }
+    case 'SEARCH_USER_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case 'SEARCH_USER_REJECTED': {
+      return {
+        ...state,
+        isSuccess: false,
+        isLoading: false,
+        isError: true,
+        statusMsg: 'Failed',
+        alertMsg: 'Failed to update data',
+      };
+    }
+    case 'SEARCH_USER_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+        statusMsg: 'Succes',
+        alertMsg: action.payload.data.message,
+        resultSearch: action.payload.data.results,
+      };
+    }
     case 'CLEAR_MESSAGE': {
       return {
         ...state,
@@ -73,6 +101,12 @@ export default (state = initialStateProfile, action) => {
         isError: false,
         alertMsg: '',
         statusMsg: '',
+      };
+    }
+    case 'CLEAR_RESULT_SEARCH': {
+      return {
+        ...state,
+        resultSearch: [],
       };
     }
     default: {

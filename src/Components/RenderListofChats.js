@@ -23,7 +23,7 @@ const RenderListofChats = ({dataChats, userIdLogin}) => {
               source={
                 dataChats.recepientDetail.avatar
                   ? {uri: dataChats.recepientDetail.avatar}
-                  : require('../assests/images/default-avatar1.png')
+                  : require('../../assets/images/default-avatar1.png')
               }
             />
             <View style={styles.content}>
@@ -77,7 +77,7 @@ const RenderListofChats = ({dataChats, userIdLogin}) => {
               source={
                 dataChats.senderDetail.avatar
                   ? {uri: dataChats.senderDetail.avatar}
-                  : require('../assests/images/default-avatar1.png')
+                  : require('../../assets/images/default-avatar1.png')
               }
             />
             <View style={styles.content}>

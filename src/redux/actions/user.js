@@ -9,6 +9,13 @@ export default {
     type: 'UPDATE_USER',
     payload: http(token).patch('private/users', data),
   }),
+  searchUser: (search) => ({
+    type: 'SEARCH_USER',
+    payload: http().get(`users?search=${search}`),
+  }),
+  clearResultSearch: () => ({
+    type: 'CLEAR_RESULT_SEARCH',
+  }),
   clearMessage: () => ({
     type: 'CLEAR_MESSAGE',
   }),

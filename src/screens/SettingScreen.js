@@ -42,7 +42,7 @@ const SettingScreen = () => {
           source={
             dataProfile.avatar
               ? {uri: `${API_URL}${dataProfile.avatar}`}
-              : require('../assests/images/default-avatar1.png')
+              : require('../../assets/images/default-avatar1.png')
           }
         />
         <View>

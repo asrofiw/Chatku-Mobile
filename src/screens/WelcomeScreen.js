@@ -9,7 +9,10 @@ const WelcomeScreen = () => {
   return (
     <View style={styles.parent}>
       <Text style={styles.title}>Welcome to ChatKu</Text>
-      <Image style={styles.img} />
+      <Image
+        style={styles.img}
+        source={require('../../assets/images/logo.png')}
+      />
       <View>
         <Text style={styles.txtToS}>
           Read our Privacy Policy. Tap "Agree and Continue" to accept the Terms
@@ -43,7 +46,6 @@ const styles = StyleSheet.create({
   },
   img: {
     alignSelf: 'center',
-    backgroundColor: '#26d366',
     height: 300,
     width: 300,
     borderRadius: 300 / 2,

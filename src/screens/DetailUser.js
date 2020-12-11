@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {
   Image,
@@ -10,18 +11,29 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {API_URL} from '@env';
-import ImagePicker from 'react-native-image-picker';
-import {Input, Item, Toast} from 'native-base';
+import * as ImagePicker from 'react-native-image-picker';
+import {Button, Input, Item, Toast} from 'native-base';
+import {Formik} from 'formik';
+import * as yup from 'yup';
 
 // Import action
 import userAction from '../redux/actions/user';
 
+const nameSchema = yup.object({
+  name: yup.string().max(25).required(),
+});
+
+const aboutSchema = yup.object({
+  about: yup.string().max(100).required(),
+});
+
 const DetailUser = () => {
-  const [nameTemp, setNameTemp] = useState();
+  const [nameTemp, setNameTemp] = useState('');
+  const [aboutTemp, setAboutTemp] = useState('');
   const [avatarTemp, setAvatarTemp] = useState();
-  const [aboutTemp, setAboutTemp] = useState();
   const [modalName, setModalName] = useState(false);
   const [modalAbout, setModalAbout] = useState(false);
+  const [modalOption, setModalOption] = useState(false);
   const auth = useSelector((state) => state.auth);
   const user = useSelector((state) => state.user);
   const {token} = auth;
@@ -29,7 +41,7 @@ const DetailUser = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(userAction.getUser(token));
+    dispatch(userAction.getUser(token)).catch((e) => console.log(e.message));
     onSetAll();
     setTimeout(() => {
       if (user.isSuccess) {
@@ -43,68 +55,87 @@ const DetailUser = () => {
     setAboutTemp(user.dataProfile.about);
   };
 
-  const onUpdateAvatar = () => {
-    const form = new FormData();
-    const fileFilter = ['image/jpg', 'image/jpeg', 'image/png'];
-    if (avatarTemp.fileSize > 2000000) {
-      Toast.show({
-        text: 'Limit file size 2mb',
-        buttonText: 'Ok',
-      });
-    } else if (!fileFilter.includes(avatarTemp.type)) {
-      Toast.show({
-        text: 'File must an image',
-        buttonText: 'Ok',
-      });
-    } else {
-      form.append('avatar', {
-        uri: avatarTemp.uri,
-        type: avatarTemp.type,
-        name: avatarTemp.fileName,
-      });
-      dispatch(userAction.updateUser(token, form));
-      setAvatarTemp();
-    }
-    setTimeout(() => {
-      onRefresh();
-    });
-  };
-
-  const onRefresh = () => {
-    const {isSuccess, isError, alertMsg} = user;
-    if (isError) {
-      Toast.show({
-        text: alertMsg,
-        buttonText: 'Ok',
-      });
-    } else if (isSuccess) {
-      dispatch(userAction.getUser(token));
-      onSetAll();
-      setTimeout(() => {
-        dispatch(userAction.clearMessage());
-        setModalAbout(false);
-        setModalName(false);
-      });
-    }
-  };
-
   const chooseAvatar = () => {
     const option = {
       noData: true,
       saveToPhotos: true,
       mediaType: 'photo',
     };
-    ImagePicker.showImagePicker(option, (res) => {
+    ImagePicker.launchImageLibrary(option, (res) => {
+      if (res.didCancel || res.error || res.customButton) {
+        console.log(res);
+      } else if (res.uri) {
+        setAvatarTemp(res);
+      }
+    });
+  };
+
+  const openCamera = () => {
+    const option = {
+      noData: true,
+      saveToPhotos: true,
+      mediaType: 'photo',
+    };
+    ImagePicker.launchCamera(option, (res) => {
       if (res.didCancel || res.error || res.customButton) {
         console.log(res);
       } else {
         setAvatarTemp(res);
-        setTimeout(() => {
-          onUpdateAvatar();
-        }, 1000);
       }
     });
   };
+
+  const onUpdateAvatar = () => {
+    const form = new FormData();
+    const fileFilter = ['image/jpg', 'image/jpeg', 'image/png'];
+    if (avatarTemp) {
+      if (avatarTemp.fileSize > 2000000) {
+        Toast.show({
+          text: 'Limit file size 2mb',
+          buttonText: 'Ok',
+        });
+      } else if (!fileFilter.includes(avatarTemp.type)) {
+        Toast.show({
+          text: 'File must an image',
+          buttonText: 'Ok',
+        });
+      } else {
+        form.append('avatar', {
+          uri: avatarTemp.uri,
+          type: avatarTemp.type,
+          name: avatarTemp.fileName,
+        });
+        dispatch(userAction.updateUser(token, form)).catch((e) =>
+          console.log(e.message),
+        );
+        setAvatarTemp();
+      }
+    }
+  };
+
+  const onRefresh = () => {
+    const {isSuccessUpdate, isError, alertMsg} = user;
+    if (isError) {
+      Toast.show({
+        text: alertMsg,
+        buttonText: 'Ok',
+      });
+    } else if (isSuccessUpdate) {
+      dispatch(userAction.getUser(token)).catch((e) => console.log(e.message));
+      onSetAll();
+      dispatch(userAction.clearMessage());
+      setModalAbout(false);
+      setModalName(false);
+      setModalOption(false);
+    }
+  };
+
+  useEffect(() => {
+    if (avatarTemp) {
+      onUpdateAvatar();
+    }
+    onRefresh();
+  });
 
   const onOpenModalName = () => {
     setModalName(true);
@@ -114,88 +145,136 @@ const DetailUser = () => {
     setModalAbout(true);
   };
 
-  const ModalEditName = () => {
-    const [changeName, setChangeName] = useState('');
-    const onChangeName = (value) => {
-      setChangeName(value);
-    };
+  const onOpenModalOption = () => {
+    setModalOption(true);
+  };
 
-    const onUpdateName = () => {
-      const form = new FormData();
-      form.append('name', changeName);
-      dispatch(userAction.updateUser(token, form));
-      setTimeout(() => {
-        onRefresh();
-      });
-    };
+  const ModalOption = () => {
+    return (
+      <View style={styles.wrapperViewModal}>
+        <Text style={styles.label}>Select an options</Text>
+        <Button full style={styles.btnOptions} onPress={openCamera}>
+          <Text>Open camera...</Text>
+        </Button>
+        <Button full style={styles.btnOptions} onPress={chooseAvatar}>
+          <Text>Choose image from gallery...</Text>
+        </Button>
+        <Button style={styles.btnCancel} onPress={() => setModalOption(false)}>
+          <Text style={styles.txtCancel}>Cancel</Text>
+        </Button>
+      </View>
+    );
+  };
+
+  const ModalEditName = () => {
     return (
       <View style={styles.wrapperViewModal}>
         <Text style={styles.label}>Edit Name</Text>
-        <Item style={styles.itemInput}>
-          <Input
-            placeholder="Name"
-            style={styles.input}
-            maxLength={25}
-            value={changeName}
-            onChangeText={onChangeName}
-          />
-          <Text style={styles.txtCount}>{25 - changeName.length}</Text>
-        </Item>
-        <View style={styles.wrapperBtn}>
-          <TouchableOpacity
-            style={styles.btnEditorModalName}
-            onPress={() => setModalName(false)}>
-            <Text>Cancel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btnEditorModalName}
-            onPress={onUpdateName}>
-            <Text>Save</Text>
-          </TouchableOpacity>
-        </View>
+        <Formik
+          initialValues={nameTemp ? {name: nameTemp} : {name: ''}}
+          validationSchema={nameSchema}
+          onSubmit={(values) => {
+            const form = new FormData();
+            form.append('name', values.name);
+            dispatch(userAction.updateUser(token, form)).catch((e) =>
+              console.log(e.message),
+            );
+          }}>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
+            <View>
+              <Item style={styles.itemInput}>
+                <Input
+                  placeholder="Name"
+                  style={styles.input}
+                  maxLength={25}
+                  value={values.name}
+                  onChangeText={handleChange('name')}
+                  onBlur={handleBlur('name')}
+                />
+                <Text style={styles.txtCount}>{25 - values.name.length}</Text>
+              </Item>
+              {touched.name && errors.name && (
+                <Text style={styles.txtError}>{errors.name}</Text>
+              )}
+              <View style={styles.wrapperBtn}>
+                <TouchableOpacity
+                  style={styles.btnEditorModalName}
+                  onPress={() => setModalName(false)}>
+                  <Text>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.btnEditorModalName}
+                  onPress={handleSubmit}>
+                  <Text>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </Formik>
       </View>
     );
   };
 
   const ModalEditAbout = () => {
-    const [changeAbout, setChangeAbout] = useState('');
-    const onChangeAbout = (value) => {
-      setChangeAbout(value);
-    };
-
-    const onUpdateAbout = () => {
-      const form = new FormData();
-      form.append('about', changeAbout);
-      dispatch(userAction.updateUser(token, form));
-      setModalAbout(false);
-      onRefresh();
-    };
     return (
       <View style={styles.wrapperViewModal}>
         <Text style={styles.label}>Edit About</Text>
-        <Item style={styles.itemInput}>
-          <Input
-            placeholder="About"
-            style={styles.input}
-            multiline={true}
-            maxLength={100}
-            value={changeAbout}
-            onChangeText={onChangeAbout}
-          />
-          <Text style={styles.txtCount}>{100 - changeAbout.length}</Text>
-        </Item>
-        <View style={styles.wrapperBtn}>
-          <TouchableOpacity
-            style={styles.btnEditorModalName}
-            onPress={() => setModalAbout(false)}>
-            <Text>Cancel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btnEditorModalName}
-            onPress={onUpdateAbout}>
-            <Text>Save</Text>
-          </TouchableOpacity>
-        </View>
+        <Formik
+          initialValues={aboutTemp ? {about: aboutTemp} : {about: ''}}
+          validationSchema={aboutSchema}
+          onSubmit={(values) => {
+            console.log('ok');
+            const form = new FormData();
+            form.append('about', values.about);
+            dispatch(userAction.updateUser(token, form)).catch((e) =>
+              console.log(e.message),
+            );
+          }}>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
+            <View>
+              <Item style={styles.itemInput}>
+                <Input
+                  placeholder="About"
+                  style={styles.input}
+                  maxLength={100}
+                  value={values.about}
+                  onChangeText={handleChange('about')}
+                  onBlur={handleBlur('about')}
+                />
+                <Text style={styles.txtCount}>{100 - values.about.length}</Text>
+              </Item>
+              {touched.about && errors.about && (
+                <Text style={styles.txtError}>{errors.about}</Text>
+              )}
+              <View style={styles.wrapperBtn}>
+                <TouchableOpacity
+                  style={styles.btnEditorModalName}
+                  onPress={() => setModalAbout(false)}>
+                  <Text>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.btnEditorModalName}
+                  onPress={handleSubmit}>
+                  <Text>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </Formik>
       </View>
     );
   };
@@ -213,7 +292,7 @@ const DetailUser = () => {
             }
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btnIcon} onPress={chooseAvatar}>
+        <TouchableOpacity style={styles.btnIcon} onPress={onOpenModalOption}>
           <Icon name="camera" size={30} color="#ffffff" />
         </TouchableOpacity>
       </View>
@@ -265,14 +344,31 @@ const DetailUser = () => {
           <Text style={styles.subTitle}>+ {dataProfile.phone}</Text>
         </View>
       </View>
-      <Modal visible={modalName} transparent={true}>
+      <Modal
+        animationType="fade"
+        visible={modalName}
+        transparent={true}
+        onRequestClose={() => setModalName(false)}>
         <View style={styles.modalView}>
           <ModalEditName />
         </View>
       </Modal>
-      <Modal visible={modalAbout} transparent={true}>
+      <Modal
+        animationType="fade"
+        visible={modalAbout}
+        transparent={true}
+        onRequestClose={() => setModalAbout(false)}>
         <View style={styles.modalView}>
           <ModalEditAbout />
+        </View>
+      </Modal>
+      <Modal
+        animationType="fade"
+        visible={modalOption}
+        transparent={true}
+        onRequestClose={() => setModalOption(false)}>
+        <View style={styles.modalView}>
+          <ModalOption />
         </View>
       </Modal>
     </View>
@@ -412,5 +508,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 0.5,
+  },
+  btnOptions: {
+    justifyContent: 'flex-start',
+    backgroundColor: '#ffffff',
+    elevation: 0,
+    paddingHorizontal: 10,
+  },
+  btnCancel: {
+    alignSelf: 'flex-end',
+    paddingHorizontal: 10,
+    elevation: 0,
+    backgroundColor: '#ffffff',
+  },
+  txtCancel: {
+    color: '#21978b',
+  },
+  txtError: {
+    color: 'red',
+    fontSize: 12,
+    marginHorizontal: 10,
   },
 });

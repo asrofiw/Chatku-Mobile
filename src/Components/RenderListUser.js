@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {API_URL} from '@env';
 
 const RenderListUser = ({listUser, userLogin}) => {
   const navigation = useNavigation();
@@ -22,7 +23,7 @@ const RenderListUser = ({listUser, userLogin}) => {
             style={styles.img}
             source={
               listUser.avatar
-                ? {uri: listUser.avatar}
+                ? {uri: `${API_URL}${listUser.avatar}`}
                 : require('../../assets/images/default-avatar1.png')
             }
           />

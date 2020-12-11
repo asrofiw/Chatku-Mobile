@@ -1,4 +1,5 @@
 const initialStateProfile = {
+  isSuccessUpdate: false,
   isSuccess: false,
   isLoading: false,
   isError: false,
@@ -48,7 +49,7 @@ export default (state = initialStateProfile, action) => {
     case 'UPDATE_USER_REJECTED': {
       return {
         ...state,
-        isSuccess: false,
+        isSuccessUpdate: false,
         isLoading: false,
         isError: true,
         statusMsg: 'Failed',
@@ -60,7 +61,7 @@ export default (state = initialStateProfile, action) => {
         ...state,
         isLoading: false,
         isError: false,
-        isSuccess: true,
+        isSuccessUpdate: true,
         statusMsg: 'Succes',
         alertMsg: action.payload.data.message,
         dataProfile: action.payload.data.results,
@@ -96,6 +97,7 @@ export default (state = initialStateProfile, action) => {
     case 'CLEAR_MESSAGE': {
       return {
         ...state,
+        isSuccessUpdate: false,
         isSuccess: false,
         isLoading: false,
         isError: false,

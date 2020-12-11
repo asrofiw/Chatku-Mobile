@@ -12,7 +12,7 @@ const RenderListUser = ({listUser, userLogin}) => {
       onPress={() =>
         navigation.navigate('ChatRoom', {
           id: listUser.id,
-          avatar: listUser.avatar,
+          avatar: `${API_URL}${listUser.avatar}`,
           name: listUser.name,
           phone: listUser.phone,
         })

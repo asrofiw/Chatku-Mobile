@@ -77,7 +77,7 @@ const DetailUser = () => {
       mediaType: 'photo',
     };
     ImagePicker.launchCamera(option, (res) => {
-      if (res.didCancel || res.error || res.customButton) {
+      if (res.didCancel || res.error || res.customButton || res.errorMessage) {
         console.log(res);
       } else {
         setAvatarTemp(res);

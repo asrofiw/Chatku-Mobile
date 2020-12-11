@@ -55,6 +55,7 @@ export default (state = initialStateProfile, action) => {
         isError: true,
         statusMsg: 'Failed',
         alertMsg: action.payload.response.data.message,
+        detailChats: [],
       };
     }
     case 'GET_DETAIL_CHATS_FULFILLED': {

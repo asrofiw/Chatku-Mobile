@@ -2,6 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
+import {API_URL} from '@env';
 
 const RenderListofChats = ({dataChats, userIdLogin}) => {
   const navigation = useNavigation();
@@ -14,7 +15,7 @@ const RenderListofChats = ({dataChats, userIdLogin}) => {
               id: dataChats.recepientDetail.id,
               name: dataChats.recepientDetail.name,
               phone: dataChats.recepientDetail.phone,
-              avatar: dataChats.recepientDetail.avatar,
+              avatar: `${API_URL}${dataChats.recepientDetail.avatar}`,
             })
           }>
           <View style={styles.wrapperChats}>
@@ -22,7 +23,7 @@ const RenderListofChats = ({dataChats, userIdLogin}) => {
               style={styles.img}
               source={
                 dataChats.recepientDetail.avatar
-                  ? {uri: dataChats.recepientDetail.avatar}
+                  ? {uri: `${API_URL}${dataChats.recepientDetail.avatar}`}
                   : require('../../assets/images/default-avatar1.png')
               }
             />

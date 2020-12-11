@@ -25,7 +25,7 @@ const Register = () => {
     const data = {
       phone: codeCountry + number,
     };
-    dispatch(authAction.register(data));
+    dispatch(authAction.register(data)).catch((e) => console.log(e.message));
   };
 
   useEffect(() => {
@@ -36,9 +36,11 @@ const Register = () => {
         buttonText: 'OK',
       });
       dispatch(authAction.clearMessage());
+      Keyboard.dismiss();
     } else if (isSuccess) {
       navigation.navigate('ProfileInfo');
       dispatch(authAction.clearMessage());
+      Keyboard.dismiss();
     }
   });
 

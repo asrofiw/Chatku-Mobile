@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
@@ -12,6 +12,7 @@ import {Text, View, Root, Item, Input} from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {HeaderBackButton} from '@react-navigation/stack';
+import SplashScreen from 'react-native-splash-screen';
 
 // import action
 import messagesAction from '../redux/actions/messages';
@@ -181,6 +182,10 @@ const Main = () => {
   const setValueSearch = (value) => {
     setSearch(value);
   };
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   return (
     <Root>
       <NavigationContainer>

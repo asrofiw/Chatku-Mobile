@@ -5,14 +5,42 @@ import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
-import socket from '../helpers/socket';
+import jwtDecode from 'jwt-decode';
+import PushNotification from 'react-native-push-notification';
 
 // Import action
 import messagesAction from '../redux/actions/messages';
-import jwtDecode from 'jwt-decode';
 
 // import component render
 import RenderListofChats from '../Components/RenderListofChats';
+
+// configure remote notifications
+PushNotification.configure({
+  onRegister: function (token) {
+    console.log(`Token: ${JSON.stringify(token)}`);
+  },
+
+  onNotification: function (notif) {
+    console.log(`Notif: ${JSON.stringify(notif)}`);
+  },
+
+  onRegistrationError: function (err) {
+    console.error(err.message, err);
+  },
+});
+
+// create Channel notifications
+PushNotification.createChannel(
+  {
+    channelId: 'income-message', // (required)
+    channelName: 'Message', // (required)
+    channelDescription: 'This channel for income message', // (optional) default: undefined.
+    soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+    importance: 4, // (optional) default: 4. Int value of the Android notification importance
+    vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+  },
+  (created) => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+);
 
 const Chat = () => {
   const [loading, setLoading] = useState(false);
@@ -27,12 +55,6 @@ const Chat = () => {
     dispatch(messagesAction.getListOfChats(token)).catch((e) =>
       console.log(e.message),
     );
-    socket.on(decode.id, () => {
-      dispatch(messagesAction.getListOfChats(token));
-    });
-    // return () => {
-    //   socket.disconnect();
-    // };
   }, []);
   const getData = () => {
     setLoading(true);

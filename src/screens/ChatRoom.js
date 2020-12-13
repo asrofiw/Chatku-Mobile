@@ -13,12 +13,26 @@ import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
 import jwtDecode from 'jwt-decode';
 import socket from '../helpers/socket';
+import PushNotification from 'react-native-push-notification';
 
 // Import action
 import messagesAction from '../redux/actions/messages';
 
 // Import Component render
 import RenderChatRoom from '../Components/RenderChatRoom';
+
+// create Channel notifications
+PushNotification.createChannel(
+  {
+    channelId: 'income-message', // (required)
+    channelName: 'Message', // (required)
+    channelDescription: 'This channel for income message', // (optional) default: undefined.
+    soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+    importance: 4, // (optional) default: 4. Int value of the Android notification importance
+    vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+  },
+  (created) => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+);
 
 const ChatRoom = ({route}) => {
   const auth = useSelector((state) => state.auth);
@@ -39,10 +53,10 @@ const ChatRoom = ({route}) => {
       dispatch(messagesAction.getDetailChats(token, id)).catch((e) =>
         console.log(e.message),
       );
+      dispatch(messagesAction.getListOfChats(token)).catch((e) =>
+        console.log(e.message),
+      );
     });
-    // return () => {
-    //   socket.disconnect();
-    // };
   }, []);
 
   const isTyping = (value) => {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -13,6 +14,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {HeaderBackButton} from '@react-navigation/stack';
 import SplashScreen from 'react-native-splash-screen';
+import socket from '../helpers/socket';
+import jwtDecode from 'jwt-decode';
+import PushNotification from 'react-native-push-notification';
 
 // import action
 import messagesAction from '../redux/actions/messages';
@@ -174,16 +178,51 @@ const HeaderSearch = (props) => {
   );
 };
 
+// create channel
+PushNotification.createChannel(
+  {
+    channelId: 'income-message', // (required)
+    channelName: 'Message', // (required)
+    channelDescription: 'This channel for income message', // (optional) default: undefined.
+    soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+    importance: 4, // (optional) default: 4. Int value of the Android notification importance
+    vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+  },
+  (created) => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+);
+
 const Main = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.user);
   const [inputSearch, setInputSearch] = useState(false);
   const [search, setSearch] = useState('');
   const setValueSearch = (value) => {
     setSearch(value);
   };
+
+  let decode = {};
+  if (auth.token.length > 0) {
+    decode = jwtDecode(auth.token);
+  }
+  let name = '';
+  if (user.dataProfile) {
+    name = user.dataProfile.name;
+  }
   useEffect(() => {
     SplashScreen.hide();
+    if (auth.token.length > 0) {
+      socket.on(decode.id, () => {
+        dispatch(messagesAction.getListOfChats(auth.token)).catch((e) =>
+          console.log(e.message),
+        );
+        PushNotification.localNotification({
+          channelId: 'income-message',
+          title: `Hi ${name},`,
+          message: 'You have a new message',
+        });
+      });
+    }
   }, []);
 
   return (

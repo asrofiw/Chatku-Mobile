@@ -69,7 +69,7 @@ const RenderListofChats = ({dataChats, userIdLogin}) => {
               id: dataChats.senderDetail.id,
               name: dataChats.senderDetail.name,
               phone: dataChats.senderDetail.phone,
-              avatar: dataChats.senderDetail.avatar,
+              avatar: `${API_URL}${dataChats.senderDetail.avatar}`,
             })
           }>
           <View style={styles.wrapperChats}>
@@ -77,7 +77,7 @@ const RenderListofChats = ({dataChats, userIdLogin}) => {
               style={styles.img}
               source={
                 dataChats.senderDetail.avatar
-                  ? {uri: dataChats.senderDetail.avatar}
+                  ? {uri: `${API_URL}${dataChats.senderDetail.avatar}`}
                   : require('../../assets/images/default-avatar1.png')
               }
             />

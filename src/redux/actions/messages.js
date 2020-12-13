@@ -18,6 +18,10 @@ export default {
     type: 'POST_MESSAGE',
     payload: http(token).post(`private/message/${id}`, qs.stringify(data)),
   }),
+  updateReadMessage: (token, id) => ({
+    type: 'READ_MESSAGE',
+    payload: http(token).patch(`private/message/${id}`),
+  }),
   clearMessage: () => ({
     type: 'CLEAR_MESSAGE',
   }),

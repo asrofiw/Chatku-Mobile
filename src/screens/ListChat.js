@@ -2,7 +2,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'native-base';
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import jwtDecode from 'jwt-decode';
@@ -65,16 +65,26 @@ const Chat = () => {
   };
   return (
     <View style={styles.parent}>
-      <FlatList
-        refreshing={loading}
-        onRefresh={getData}
-        showsVerticalScrollIndicator={false}
-        data={listOfChats}
-        renderItem={({item}) => (
-          <RenderListofChats dataChats={item} userIdLogin={decode.id} />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      {messages.listOfChats ? (
+        <FlatList
+          refreshing={loading}
+          onRefresh={getData}
+          showsVerticalScrollIndicator={false}
+          data={listOfChats}
+          renderItem={({item}) => (
+            <RenderListofChats
+              dataChats={item}
+              userIdLogin={decode.id}
+              token={token}
+            />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      ) : (
+        <View style={styles.wrapperNoMessage}>
+          <Text>There are no messages</Text>
+        </View>
+      )}
       <Button
         rounded
         style={styles.btnContact}
@@ -91,6 +101,11 @@ const styles = StyleSheet.create({
   parent: {
     flex: 1,
     backgroundColor: '#ffffff',
+  },
+  wrapperNoMessage: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
   btnContact: {
     width: 60,

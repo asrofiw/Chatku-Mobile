@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {API_URL} from '@env';
 
 const RenderListContacts = ({dataContact}) => {
   const navigation = useNavigation();
@@ -9,7 +10,7 @@ const RenderListContacts = ({dataContact}) => {
       onPress={() =>
         navigation.navigate('ChatRoom', {
           id: dataContact.id,
-          avatar: dataContact.avatar,
+          avatar: `${API_URL}${dataContact.avatar}`,
           name: dataContact.name,
           phone: dataContact.phone,
         })
@@ -19,7 +20,7 @@ const RenderListContacts = ({dataContact}) => {
           style={styles.img}
           source={
             dataContact.avatar
-              ? {uri: dataContact.avatar}
+              ? {uri: `${API_URL}${dataContact.avatar}`}
               : require('../../assets/images/default-avatar1.png')
           }
         />

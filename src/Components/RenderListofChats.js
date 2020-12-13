@@ -3,21 +3,43 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {API_URL} from '@env';
+import {useDispatch} from 'react-redux';
 
-const RenderListofChats = ({dataChats, userIdLogin}) => {
+// import action
+import messageAction from '../redux/actions/messages';
+
+const RenderListofChats = ({dataChats, userIdLogin, token}) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const onPressRecepient = () => {
+    dispatch(
+      messageAction.updateReadMessage(token, dataChats.recepientDetail.id),
+    ).catch((e) => console.log(e.message));
+    navigation.navigate('ChatRoom', {
+      id: dataChats.recepientDetail.id,
+      name: dataChats.recepientDetail.name,
+      phone: dataChats.recepientDetail.phone,
+      avatar: `${API_URL}${dataChats.recepientDetail.avatar}`,
+    });
+  };
+
+  const onPressSender = () => {
+    dispatch(
+      messageAction.updateReadMessage(token, dataChats.senderDetail.id),
+    ).catch((e) => console.log(e.message));
+    navigation.navigate('ChatRoom', {
+      id: dataChats.senderDetail.id,
+      name: dataChats.senderDetail.name,
+      phone: dataChats.senderDetail.phone,
+      avatar: `${API_URL}${dataChats.senderDetail.avatar}`,
+    });
+  };
+
   return (
     <View>
       {dataChats.senderId === userIdLogin ? (
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('ChatRoom', {
-              id: dataChats.recepientDetail.id,
-              name: dataChats.recepientDetail.name,
-              phone: dataChats.recepientDetail.phone,
-              avatar: `${API_URL}${dataChats.recepientDetail.avatar}`,
-            })
-          }>
+        <TouchableOpacity onPress={onPressRecepient}>
           <View style={styles.wrapperChats}>
             <Image
               style={styles.img}
@@ -63,15 +85,7 @@ const RenderListofChats = ({dataChats, userIdLogin}) => {
           </View>
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('ChatRoom', {
-              id: dataChats.senderDetail.id,
-              name: dataChats.senderDetail.name,
-              phone: dataChats.senderDetail.phone,
-              avatar: `${API_URL}${dataChats.senderDetail.avatar}`,
-            })
-          }>
+        <TouchableOpacity onPress={onPressSender}>
           <View style={styles.wrapperChats}>
             <Image
               style={styles.img}
@@ -90,7 +104,7 @@ const RenderListofChats = ({dataChats, userIdLogin}) => {
                     + {dataChats.senderDetail.phone}
                   </Text>
                 )}
-                <Text style={styles.date}>
+                <Text style={dataChats.isRead ? styles.date : styles.dateRead}>
                   {moment.utc(dataChats.createdAt).local().calendar({
                     sameDay: 'hh:mm A',
                     lastDay: '[Yesterday]',
@@ -98,7 +112,7 @@ const RenderListofChats = ({dataChats, userIdLogin}) => {
                   })}
                 </Text>
               </View>
-              <View>
+              <View style={styles.bottomContent}>
                 {dataChats.message.length < 30 && (
                   <Text style={styles.message}>{dataChats.message}</Text>
                 )}
@@ -107,6 +121,7 @@ const RenderListofChats = ({dataChats, userIdLogin}) => {
                     {dataChats.message.substring(0, 30).concat('...')}
                   </Text>
                 )}
+                {!dataChats.isRead && <View style={styles.badge} />}
               </View>
             </View>
           </View>
@@ -155,5 +170,20 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 14,
     color: '#9b9b9b',
+    flexGrow: 1,
+  },
+  bottomContent: {
+    flexDirection: 'row',
+  },
+  dateRead: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#26d366',
+  },
+  badge: {
+    backgroundColor: '#26d366',
+    width: 20,
+    height: 20,
+    borderRadius: 20 / 2,
   },
 });

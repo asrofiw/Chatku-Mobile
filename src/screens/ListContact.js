@@ -1,57 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 
 // Import action
 import friendsAction from '../redux/actions/friends';
 
-const RenderItem = ({dataContact}) => {
-  const navigation = useNavigation();
-  return (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ChatRoom', {
-          id: dataContact.id,
-          avatar: dataContact.avatar,
-          name: dataContact.name,
-          phone: dataContact.phone,
-        })
-      }>
-      <View style={styles.wrapperChats}>
-        <Image
-          style={styles.img}
-          source={
-            dataContact.avatar
-              ? {uri: dataContact.avatar}
-              : require('../../assets/images/default-avatar1.png')
-          }
-        />
-        <View style={styles.content}>
-          {dataContact.name ? (
-            <Text style={styles.name}>{dataContact.name}</Text>
-          ) : (
-            <Text style={styles.name}>+ {dataContact.phone}</Text>
-          )}
-          {dataContact.about && (
-            <View>
-              <Text style={styles.message}>{dataContact.about}</Text>
-            </View>
-          )}
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
+// import Component
+import RenderListContacs from '../Components/RenderListContacts';
 
 const ListContact = () => {
   const navigation = useNavigation();
@@ -84,7 +42,7 @@ const ListContact = () => {
         <FlatList
           showsVerticalScrollIndicator={false}
           data={dataFriends}
-          renderItem={({item}) => <RenderItem dataContact={item} />}
+          renderItem={({item}) => <RenderListContacs dataContact={item} />}
           keyExtractor={(item) => item.id.toString()}
         />
       )}

@@ -4,9 +4,14 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {API_URL} from '@env';
 
-const RenderListUser = ({listUser, userLogin}) => {
+const RenderListUser = ({
+  listUser,
+  userLogin,
+  dataFriends,
+  onPressAddFriend,
+}) => {
   const navigation = useNavigation();
-  console.log(listUser);
+  const friendId = dataFriends.map((e) => e.user_id_friends);
   return (
     <TouchableOpacity
       onPress={() =>
@@ -39,9 +44,11 @@ const RenderListUser = ({listUser, userLogin}) => {
               </View>
             )}
           </View>
-          <TouchableOpacity>
-            <Icon name="account-plus" color="#21978b" size={30} />
-          </TouchableOpacity>
+          {!friendId.includes(listUser.id) && (
+            <TouchableOpacity onPress={onPressAddFriend}>
+              <Icon name="account-plus" color="#21978b" size={30} />
+            </TouchableOpacity>
+          )}
         </View>
       )}
     </TouchableOpacity>

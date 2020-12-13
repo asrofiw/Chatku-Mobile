@@ -1,4 +1,5 @@
 const initialStateProfile = {
+  isSuccessRead: false,
   isSuccess: false,
   isLoading: false,
   isError: false,
@@ -125,9 +126,36 @@ export default (state = initialStateProfile, action) => {
         dataPost: action.payload.data.result,
       };
     }
+    case 'READ_MESSAGE_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case 'READ_MESSAGE_REJECTED': {
+      return {
+        ...state,
+        isSuccessRead: false,
+        isLoading: false,
+        isError: true,
+        statusMsg: 'Failed',
+        alertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'READ_MESSAGE_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        isSuccessRead: true,
+        statusMsg: 'Succes',
+        alertMsg: action.payload.data.message,
+      };
+    }
     case 'CLEAR_MESSAGE': {
       return {
         ...state,
+        isSuccessRead: false,
         isSuccess: false,
         isLoading: false,
         isError: false,

@@ -42,7 +42,7 @@ const HeaderBackPhoto = (props) => {
   const onBack = () => {
     dispatch(messagesAction.getListOfChats(props.token));
     setTimeout(() => {
-      navigation.navigate('TopTabs');
+      navigation.goBack();
     });
   };
   return (

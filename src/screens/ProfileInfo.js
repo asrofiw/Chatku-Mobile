@@ -31,6 +31,10 @@ const ProfileInfo = () => {
   const [modalOption, setModalOption] = useState(false);
   const [avatar, setAvatar] = useState();
 
+  useEffect(() => {
+    getPermission();
+  }, []);
+
   const getPermission = async () => {
     try {
       const granted = await PermissionsAndroid.requestMultiple([
@@ -40,7 +44,6 @@ const ProfileInfo = () => {
       if (
         Object.values(granted).every(() => PermissionsAndroid.RESULTS.GRANTED)
       ) {
-        onOpenModalOption();
         console.log('Permissions granted');
       } else {
         console.log('Permissions denied');
@@ -57,7 +60,13 @@ const ProfileInfo = () => {
       mediaType: 'photo',
     };
     ImagePicker.launchImageLibrary(option, (res) => {
-      if (res.didCancel || res.error || res.customButton) {
+      if (
+        res.didCancel ||
+        res.error ||
+        res.customButton ||
+        res.errorMessage ||
+        res.errorCode
+      ) {
         console.log(res);
       } else {
         setAvatar(res);
@@ -72,7 +81,13 @@ const ProfileInfo = () => {
       mediaType: 'photo',
     };
     ImagePicker.launchCamera(option, (res) => {
-      if (res.didCancel || res.error || res.customButton || res.errorMessage) {
+      if (
+        res.didCancel ||
+        res.error ||
+        res.customButton ||
+        res.errorMessage ||
+        res.errorCode
+      ) {
         console.log(res);
       } else {
         setAvatar(res);
@@ -166,7 +181,7 @@ const ProfileInfo = () => {
                   Please provide your name and an optional profile photo
                 </Text>
                 <View style={styles.wrapperProvide}>
-                  <TouchableOpacity onPress={getPermission}>
+                  <TouchableOpacity onPress={onOpenModalOption}>
                     {avatar ? (
                       <View style={styles.wrapperImg}>
                         <Image style={styles.img} source={{uri: avatar.uri}} />

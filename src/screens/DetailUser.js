@@ -62,7 +62,13 @@ const DetailUser = () => {
       mediaType: 'photo',
     };
     ImagePicker.launchImageLibrary(option, (res) => {
-      if (res.didCancel || res.error || res.customButton) {
+      if (
+        res.didCancel ||
+        res.error ||
+        res.customButton ||
+        res.errorMessage ||
+        res.errorCode
+      ) {
         console.log(res);
       } else if (res.uri) {
         setAvatarTemp(res);

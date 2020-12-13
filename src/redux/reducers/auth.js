@@ -43,10 +43,12 @@ export default (state = initialState, action) => {
     case 'LOGOUT_USER': {
       return {
         ...state,
-        isLogin: false,
-        token: '',
+        isLoading: false,
+        isSuccess: false,
         isError: false,
-        alertMsg: 'Logout Successfully',
+        alertMsg: '',
+        token: '',
+        isLogin: false,
       };
     }
     case 'CLEAR_MESSAGE': {

@@ -51,9 +51,6 @@ const RenderListofChats = ({dataChats, userIdLogin, token}) => {
             />
             <View style={styles.content}>
               <View style={styles.topContent}>
-                {dataChats.friendDetail && dataChats.friendDetail.name && (
-                  <Text style={styles.name}>{dataChats.friendDetail.name}</Text>
-                )}
                 {dataChats.recepientDetail.name ? (
                   <Text style={styles.name}>
                     {dataChats.recepientDetail.name}

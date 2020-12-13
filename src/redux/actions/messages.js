@@ -25,4 +25,7 @@ export default {
   clearMessage: () => ({
     type: 'CLEAR_MESSAGE',
   }),
+  logout: () => ({
+    type: 'LOGOUT_MESSAGE',
+  }),
 };

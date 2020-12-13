@@ -67,40 +67,45 @@ const ChatRoom = ({route}) => {
     const data = {
       message,
     };
-    dispatch(messagesAction.postMessage(token, id, data));
-    setMessage('');
-    setTimeout(() => {
-      onRefresh();
-    });
-  };
-
-  const onRefresh = () => {
-    const {isSuccess, isError, alertMsg} = messages;
-    if (isError) {
-      Toast.show({
-        text: alertMsg,
-        buttonText: 'Ok',
-      });
-    } else if (isSuccess) {
-      dispatch(messagesAction.getDetailChats(token, id));
-      dispatch(messagesAction.clearMessage());
-    }
+    dispatch(messagesAction.postMessage(token, id, data)).catch((e) =>
+      console.log(e.message),
+    );
   };
 
   const onNextPage = () => {
     const {pathNext} = messages.pageInfo;
     if (pathNext) {
-      dispatch(messagesAction.getDataNextPage(token, pathNext));
+      dispatch(messagesAction.getDataNextPage(token, pathNext)).catch((e) =>
+        console.log(e.message),
+      );
       dispatch(messagesAction.clearMessage());
     }
   };
 
   const getData = () => {
     setLoading(true);
-    dispatch(messagesAction.getDetailChats(token, id));
+    dispatch(messagesAction.getDetailChats(token, id)).catch((e) =>
+      console.log(e.message),
+    );
     dispatch(messagesAction.clearMessage());
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (messages.isSuccessSend) {
+      dispatch(messagesAction.getDetailChats(token, id)).catch((e) =>
+        console.log(e.message),
+      );
+      dispatch(messagesAction.clearMessage());
+      setMessage('');
+    }
+    if (messages.isErrorSend) {
+      Toast.show({
+        text: messages.alertMsg,
+        buttonText: 'Ok',
+      });
+    }
+  });
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

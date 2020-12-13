@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {
@@ -11,11 +12,13 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {API_URL} from '@env';
-import storage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Import action
 import userAction from '../redux/actions/user';
 import authAction from '../redux/actions/auth';
+import messageAction from '../redux/actions/messages';
+import friendsAction from '../redux/actions/friends';
 
 const SettingScreen = () => {
   const auth = useSelector((state) => state.auth);
@@ -24,13 +27,19 @@ const SettingScreen = () => {
   const {dataProfile} = user;
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(userAction.getUser(token));
+    dispatch(userAction.getUser(token)).catch((e) => console.log(e.message));
     dispatch(userAction.clearMessage());
   }, []);
   const navigation = useNavigation();
   const userLogout = () => {
-    storage.removeItem('persist:chatku');
+    AsyncStorage.getAllKeys()
+      .then((keys) => AsyncStorage.multiRemove(keys))
+      .then(() => console.log('success'))
+      .catch((e) => console.log(e.message));
     dispatch(authAction.logout());
+    dispatch(userAction.logout());
+    dispatch(messageAction.logout());
+    dispatch(friendsAction.logout());
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.parent}>

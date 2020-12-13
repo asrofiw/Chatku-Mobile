@@ -111,6 +111,19 @@ export default (state = initialStateProfile, action) => {
         resultSearch: [],
       };
     }
+    case 'LOGOUT_USER': {
+      return {
+        ...state,
+        isSuccessUpdate: false,
+        isSuccess: false,
+        isLoading: false,
+        isError: false,
+        alertMsg: '',
+        statusMsg: '',
+        dataProfile: {},
+        resultSearch: [],
+      };
+    }
     default: {
       return state;
     }

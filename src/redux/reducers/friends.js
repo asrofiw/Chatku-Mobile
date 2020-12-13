@@ -76,6 +76,19 @@ export default (state = initialStateProfile, action) => {
         statusMsg: '',
       };
     }
+    case 'LOGOUT_FRIENDS': {
+      return {
+        ...state,
+        isSuccessAdd: false,
+        isSuccess: false,
+        isLoading: false,
+        isErrorAdd: false,
+        isError: false,
+        alertMsg: '',
+        statusMsg: '',
+        dataFriends: {},
+      };
+    }
     default: {
       return state;
     }

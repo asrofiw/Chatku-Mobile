@@ -1,8 +1,10 @@
 const initialStateProfile = {
   isSuccessRead: false,
+  isSuccessSend: false,
   isSuccess: false,
   isLoading: false,
   isError: false,
+  isErrorSend: false,
   alertMsg: '',
   statusMsg: '',
   listOfChats: [],
@@ -108,9 +110,9 @@ export default (state = initialStateProfile, action) => {
     case 'POST_MESSAGE_REJECTED': {
       return {
         ...state,
-        isSuccess: false,
+        isSuccessSend: false,
         isLoading: false,
-        isError: true,
+        isErrorSend: true,
         statusMsg: 'Failed',
         alertMsg: action.payload.response.data.message,
       };
@@ -119,8 +121,8 @@ export default (state = initialStateProfile, action) => {
       return {
         ...state,
         isLoading: false,
-        isError: false,
-        isSuccess: true,
+        isErrorSend: false,
+        isSuccessSend: true,
         statusMsg: 'Succes',
         alertMsg: action.payload.data.message,
         dataPost: action.payload.data.result,
@@ -156,11 +158,32 @@ export default (state = initialStateProfile, action) => {
       return {
         ...state,
         isSuccessRead: false,
+        isSuccessSend: false,
         isSuccess: false,
         isLoading: false,
+        isErrorSend: false,
         isError: false,
         alertMsg: '',
         statusMsg: '',
+      };
+    }
+    case 'LOGOUT_MESSAGE': {
+      return {
+        ...state,
+        isSuccessRead: false,
+        isSuccessSend: false,
+        isSuccess: false,
+        isLoading: false,
+        isError: false,
+        isErrorSend: false,
+        alertMsg: '',
+        statusMsg: '',
+        listOfChats: [],
+        detailChats: [],
+        dataNextPage: [],
+        dataUser: [],
+        pageInfo: {},
+        dataPost: {},
       };
     }
     default: {

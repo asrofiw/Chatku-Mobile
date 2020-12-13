@@ -1,6 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigation,
+  CommonActions,
+} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
   Image,
@@ -287,9 +291,7 @@ const Main = () => {
                               value={search}
                               onChangeText={setValueSearch}
                               onSubmitEditing={() =>
-                                navigation.replace('SearchUsers', {
-                                  search: search,
-                                })
+                                navigation.setParams({search: search})
                               }
                             />
                           </Item>

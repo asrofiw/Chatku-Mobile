@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  PermissionsAndroid,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'react-native-image-picker';
@@ -29,6 +30,25 @@ const ProfileInfo = () => {
   const user = useSelector((state) => state.user);
   const [modalOption, setModalOption] = useState(false);
   const [avatar, setAvatar] = useState();
+
+  const getPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      ]);
+      if (
+        Object.values(granted).every(() => PermissionsAndroid.RESULTS.GRANTED)
+      ) {
+        onOpenModalOption();
+        console.log('Permissions granted');
+      } else {
+        console.log('Permissions denied');
+      }
+    } catch (e) {
+      console.warn(e);
+    }
+  };
 
   const chooseAvatar = () => {
     const option = {
@@ -146,7 +166,7 @@ const ProfileInfo = () => {
                   Please provide your name and an optional profile photo
                 </Text>
                 <View style={styles.wrapperProvide}>
-                  <TouchableOpacity onPress={onOpenModalOption}>
+                  <TouchableOpacity onPress={getPermission}>
                     {avatar ? (
                       <View style={styles.wrapperImg}>
                         <Image style={styles.img} source={{uri: avatar.uri}} />

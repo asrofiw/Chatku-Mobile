@@ -1,7 +1,9 @@
 const initialStateProfile = {
   isSuccessUpdate: false,
+  isSuccessSearch: false,
   isSuccess: false,
   isLoading: false,
+  isErrorSearch: false,
   isError: false,
   alertMsg: '',
   statusMsg: '',
@@ -76,9 +78,9 @@ export default (state = initialStateProfile, action) => {
     case 'SEARCH_USER_REJECTED': {
       return {
         ...state,
-        isSuccess: false,
+        isSuccessSearch: false,
         isLoading: false,
-        isError: true,
+        isErrorSearch: true,
         statusMsg: 'Failed',
         alertMsg: 'Failed to update data',
       };
@@ -87,8 +89,8 @@ export default (state = initialStateProfile, action) => {
       return {
         ...state,
         isLoading: false,
-        isError: false,
-        isSuccess: true,
+        isErrorSearch: false,
+        isSuccessSearch: true,
         statusMsg: 'Succes',
         alertMsg: action.payload.data.message,
         resultSearch: action.payload.data.results,
@@ -98,8 +100,10 @@ export default (state = initialStateProfile, action) => {
       return {
         ...state,
         isSuccessUpdate: false,
+        isSuccessSearch: false,
         isSuccess: false,
         isLoading: false,
+        isErrorSearch: false,
         isError: false,
         alertMsg: '',
         statusMsg: '',

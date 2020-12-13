@@ -11,7 +11,11 @@ const RenderListUser = ({
   onPressAddFriend,
 }) => {
   const navigation = useNavigation();
-  const friendId = dataFriends.map((e) => e.user_id_friends);
+  let friendId = [];
+  // console.log(dataFriends);
+  if (Object.keys(dataFriends).length > 0) {
+    friendId = dataFriends.map((e) => e.user_id_friends);
+  }
   return (
     <TouchableOpacity
       onPress={() =>

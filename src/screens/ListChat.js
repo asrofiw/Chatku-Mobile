@@ -65,7 +65,7 @@ const Chat = () => {
   };
   return (
     <View style={styles.parent}>
-      {messages.listOfChats ? (
+      {Object.values(messages.listOfChats).length > 0 ? (
         <FlatList
           refreshing={loading}
           onRefresh={getData}

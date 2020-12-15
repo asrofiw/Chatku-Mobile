@@ -5,11 +5,12 @@ import {API_URL} from '@env';
 
 const RenderListContacts = ({dataContact}) => {
   const navigation = useNavigation();
+  console.log(dataContact);
   return (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate('ChatRoom', {
-          id: dataContact.id,
+          id: dataContact.user_id_friends,
           avatar: `${API_URL}${dataContact.avatar}`,
           name: dataContact.name,
           phone: dataContact.phone,

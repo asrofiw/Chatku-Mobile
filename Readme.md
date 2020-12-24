@@ -17,6 +17,6 @@ This is a realtime chat application. Build using React Native and Socket.io
 2. Type `yarn install`
 
 ## Screenshot apps
-<img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/Landing-Page.png" alt="Landing-Page" width="100" height="300" />
-<img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/List-Chats.png" alt="List-Chats" width="100" height="300" />
-<img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/Chat-Room.png" alt="Chat-Room" width="100" height="300" />
+<img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/Landing-Page.png" alt="Landing-Page" width="170" height="300" />
+<img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/List-Chats.png" alt="List-Chats" width="170" height="300" />
+<img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/Chat-Room.png" alt="Chat-Room" width="170" height="300" />

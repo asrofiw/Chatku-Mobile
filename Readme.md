@@ -11,10 +11,14 @@ This is a realtime chat application. Build using React Native and Socket.io
 ## Requirements
 1. <a href="https://nodejs.org/en/download/">React Native</a>
 2. Node_modules
+3. Device (Emulator or Android device)
 
 ## How to run the app ?
 1. Open app's directory in CMD or Terminal
 2. Type `yarn install`
+3. Run metro server `yarn start`
+4. Open app's directory in new CMD or Terminal
+5. Type `yarn android`
 
 ## Screenshot apps
 <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/Landing-Page.png" alt="Landing-Page" width="170" height="300" />

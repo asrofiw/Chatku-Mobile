@@ -2,7 +2,7 @@
 
 
 
-This is a realtime chat application. Build using React Native and Socket.io [More about Express](https://en.wikipedia.org/wiki/Express.js)
+This is a realtime chat application. Build using React Native and Socket.io
 
 ## Built With
 [![React Native](https://img.shields.io/badge/React%20Native-0.63.3-blue.svg?style=rounded-square)](https://reactnative.dev/)

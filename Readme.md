@@ -1,0 +1,22 @@
+<h1 align="center">ChatKu Mobile Android Application</h1>
+
+
+
+This is a realtime chat application. Build using React Native and Socket.io [More about Express](https://en.wikipedia.org/wiki/Express.js)
+
+## Built With
+[![React Native](https://img.shields.io/badge/React%20Native-0.63.3-blue.svg?style=rounded-square)](https://reactnative.dev/)
+[![Socket.io-client](https://img.shields.io/badge/npm%20socket.io--client-3.0.3-green.svg?style=rounded-square)](https://www.npmjs.com/package/socket.io-client/)
+
+## Requirements
+1. <a href="https://nodejs.org/en/download/">React Native</a>
+2. Node_modules
+
+## How to run the app ?
+1. Open app's directory in CMD or Terminal
+2. Type `yarn install`
+
+## Screenshot apps
+![Landing Page](https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/Landing-Page.png?raw=true)
+![List Chats](https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/List-Chats.png?raw=true)
+![Chat Room](https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/Chat-Room.png?raw=true)

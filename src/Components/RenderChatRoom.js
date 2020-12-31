@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
   myChat: {
     alignSelf: 'flex-start',
     maxWidth: '80%',
-    // minWidth: '30%',
     marginLeft: 20,
     backgroundColor: '#ffffff',
     padding: 10,
@@ -45,7 +44,6 @@ const styles = StyleSheet.create({
   theirChat: {
     alignSelf: 'flex-end',
     maxWidth: '80%',
-    // minWidth: '30%',
     marginRight: 20,
     backgroundColor: '#DCF8C6',
     padding: 10,

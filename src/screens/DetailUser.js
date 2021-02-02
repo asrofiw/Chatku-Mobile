@@ -103,15 +103,21 @@ const DetailUser = () => {
     const fileFilter = ['image/jpg', 'image/jpeg', 'image/png'];
     if (avatarTemp) {
       if (avatarTemp.fileSize > 2000000) {
+        setModalOption(false);
         Toast.show({
           text: 'Limit file size 2mb',
           buttonText: 'Ok',
+          limit: 3000,
         });
+        setAvatarTemp();
       } else if (!fileFilter.includes(avatarTemp.type)) {
+        setModalOption(false);
         Toast.show({
           text: 'File must an image',
           buttonText: 'Ok',
+          limit: 3000,
         });
+        setAvatarTemp();
       } else {
         form.append('avatar', {
           uri: avatarTemp.uri,
@@ -121,7 +127,6 @@ const DetailUser = () => {
         dispatch(userAction.updateUser(token, form)).catch((e) =>
           console.log(e.message),
         );
-        setAvatarTemp();
       }
     }
   };
@@ -133,6 +138,7 @@ const DetailUser = () => {
         text: alertMsg,
         buttonText: 'Ok',
       });
+      setAvatarTemp();
     } else if (isSuccessUpdate) {
       dispatch(userAction.getUser(token)).catch((e) => console.log(e.message));
       onSetAll();
@@ -140,6 +146,7 @@ const DetailUser = () => {
       setModalAbout(false);
       setModalName(false);
       setModalOption(false);
+      setAvatarTemp();
     }
   };
 
@@ -481,6 +488,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     backgroundColor: '#00000050',
+    position: 'relative',
   },
   wrapperViewModal: {
     backgroundColor: '#ffffff',

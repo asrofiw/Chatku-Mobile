@@ -21,6 +21,21 @@ This is a realtime chat application. Build using React Native and Socket.io
 5. Type `yarn android`
 
 ## Screenshot apps
-<img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/Landing-Page.png" alt="Landing-Page" width="170" height="300" />
-<img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/List-Chats.png" alt="List-Chats" width="170" height="300" />
-<img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/Chat-Room.png" alt="Chat-Room" width="170" height="300" />
+<div style="display: flex;flex-direction: row;flex-wrap: wrap">
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Landing-Page.png" alt="Landing-Page" width="170" height="300" />
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/List-Chats.png" alt="List-Chats" width="170" height="300" />
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Chat-Room.png" alt="Chat-Room" width="170" height="300" />
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Contacts.png" alt="Contacts" width="170" height="300" />
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Profile-Info.png" alt="Profile-Info" width="170" height="300" />
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Profile.png" alt="Profile" width="170" height="300" />
+
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Register.png" alt="Register" width="170" height="300" />
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Search.png" alt="Search" width="170" height="300" />
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Settings.png" alt="Settings" width="170" height="300" />
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Splash-Screen.png" alt="Splash-Screen" width="170" height="300" />
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/User-other-Detail.png" alt="User-other-Detail" width="170" height="300" />
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/User-other-Detail(2).png" alt="User-other-Detail(2)" width="170" height="300" />
+</div>
+
+## Ref Backend
+https://github.com/asrofiw/ChatKu-backend.git

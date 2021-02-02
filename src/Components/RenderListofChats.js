@@ -64,7 +64,7 @@ const RenderListofChats = ({dataChats, userIdLogin, token}) => {
                   {moment.utc(dataChats.createdAt).local().calendar({
                     sameDay: 'hh:mm A',
                     lastDay: '[Yesterday]',
-                    sameElse: 'DD/MM/YYY',
+                    sameElse: 'DD/MM/YYYY',
                   })}
                 </Text>
               </View>
@@ -105,7 +105,7 @@ const RenderListofChats = ({dataChats, userIdLogin, token}) => {
                   {moment.utc(dataChats.createdAt).local().calendar({
                     sameDay: 'hh:mm A',
                     lastDay: '[Yesterday]',
-                    sameElse: 'DD/MM/YYY',
+                    sameElse: 'DD/MM/YYYY',
                   })}
                 </Text>
               </View>

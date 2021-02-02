@@ -22,7 +22,8 @@ This is a realtime chat application. Build using React Native and Socket.io
 
 ## Screenshot apps
 <div style="display: flex;flex-direction: row;flex-wrap: wrap">
-  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Landing-Page.png" alt="Landing-Page" width="170" height="300" />
+  <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Landing-Page.png" alt="Landing-Page"
+  name="Landing-Page" width="170" height="300" />
   <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/List-Chats.png" alt="List-Chats" width="170" height="300" />
   <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Chat-Room.png" alt="Chat-Room" width="170" height="300" />
   <img src="https://github.com/asrofiw/Chatku-Mobile/blob/master/assets/images/scshot/Contacts.png" alt="Contacts" width="170" height="300" />
